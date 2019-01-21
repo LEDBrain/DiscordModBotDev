@@ -5,7 +5,8 @@
     "main": "bot.js",
     "private": true,
     "dependencies": {
-        "discord.js": "latest"
+        "discord.js": "latest",
+        "fs": "latest"
     },
     "author": "KokosnussDEV"
 }

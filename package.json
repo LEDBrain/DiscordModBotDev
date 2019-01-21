@@ -1,0 +1,11 @@
+{
+    "name": "discordlogbot",
+    "version": "0.0.1",
+    "description": "DiscordLogBot",
+    "main": "bot.js",
+    "private": true,
+    "dependencies": {
+        "discord.js": "latest"
+    },
+    "author": "KokosnussDEV"
+}

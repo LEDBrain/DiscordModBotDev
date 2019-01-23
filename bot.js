@@ -1,7 +1,6 @@
-import { Client, DiscordAPIError } from 'discord.js'
-const client = new Client()
-import { clientToken } from './config/config.js'
-var logChannel = client.channels.get(config.logChannel)
+const Discord = require('discord.js')
+const client = new Discord.Client()
+const config = require("./config/config")
 
 client.on('ready', () => {
     console.log("Verbunden als " + client.user.tag)
@@ -14,22 +13,32 @@ client.on('ready', () => {
 })
 
 client.on('messageDelete', (message) => {
-    logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " mit dem Inhalt " + message.content + "wurde gelöscht!")
+    const logChannel = client.channels.get("532615243776655370")
+
+    let messageDeleteE = new Discord.RichEmbed()
+        .setTitle("Nachricht gelöscht!")
+        .setColor(0x00AE86)
+        .addField("Channel", message.channel.name + "/" + message.channel.id, true)
+        .addField("Nachricht", "```" + message.content + "```", true)
+
+    logChannel.send({ embed: messageDeleteE })
 })
 
 client.on('messageUpdate', (message) => {
+    if (message.author === client.user) return
+    const logChannel = client.channels.get(config.logChannel)
+
     let messageUpdateE = new Discord.RichEmbed()
         .setTitle("Message History")
         .setColor(0x30add3)
-        .addField("Messages:", message.edits)
+        .addField("Before:", message.edits[0])
+        .addField("After:", message.content)
+        .addFooter("Discord Log Bot" + config.version)
         .setTimestamp()
 
-    logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + "bearbeitet")
+
+    logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet")
         .then(() => logChannel.send({ embed: messageUpdateE }))
 })
 
-client.login(clientToken)
-
-//TODO: Testing!!
-//TODO: Push
-//TODO: Projekt Board GitHub!
+client.login(config.clientToken)

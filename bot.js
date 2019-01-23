@@ -1,6 +1,7 @@
 const Discord = require('discord.js')
 const client = new Discord.Client()
 const config = require("./config/config")
+const logChannel = client.channels.get("532615243776655370")
 
 client.on('ready', () => {
     console.log("Verbunden als " + client.user.tag)
@@ -13,7 +14,7 @@ client.on('ready', () => {
 })
 
 client.on('messageDelete', (message) => {
-    const logChannel = client.channels.get("532615243776655370")
+    // const logChannel = client.channels.get("532615243776655370")
 
     let messageDeleteE = new Discord.RichEmbed()
         .setTitle("Nachricht gelöscht!")
@@ -26,14 +27,14 @@ client.on('messageDelete', (message) => {
 
 client.on('messageUpdate', (message) => {
     if (message.author === client.user) return
-    const logChannel = client.channels.get(config.logChannel)
+        //const logChannel = client.channels.get(config.logChannel)
 
     let messageUpdateE = new Discord.RichEmbed()
         .setTitle("Message History")
         .setColor(0x30add3)
         .addField("Before:", message.edits[0])
         .addField("After:", message.content)
-        .addFooter("Discord Log Bot" + config.version)
+        .setFooter("Discord Log Bot" + config.version)
         .setTimestamp()
 
 

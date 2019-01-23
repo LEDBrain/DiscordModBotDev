@@ -2,8 +2,8 @@
 name: Bug report
 about: Erstelle einen Bug Report
 title: "[BUG]"
-labels: bug
-assignees: ''
+labels: NEW
+assignees: KokosnussDEV
 
 ---
 

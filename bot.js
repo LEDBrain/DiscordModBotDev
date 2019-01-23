@@ -18,8 +18,8 @@ client.on('messageDelete', (message) => {
     let messageDeleteE = new Discord.RichEmbed()
         .setTitle("Nachricht gelöscht!")
         .setColor(0x00AE86)
-        .addField("Channel", message.channel.name + "/" + message.channel.id, true)
-        .addField("Nachricht", "```" + message.content + "```", true)
+        .addField("Channel", message.channel.name + "/" + message.channel.id)
+        .addField("Nachricht", "```" + message.content + "```")
 
     logChannel.send({ embed: messageDeleteE })
 })

@@ -1,4 +1,4 @@
 # DiscordLogBot
 
 ## TODO
-[] Mute Command
+- [ ] Mute Command

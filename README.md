@@ -3,7 +3,8 @@
 ## TODO
 - [x] ModLog Edit
 - [x] ModLog Delete
-- [ ] Mute Command
+- [x] Mute Command
+- [ ] Line 122
 - [ ] Verwarnungssystem + JSON
 - [ ] Ban System (Reactions?)
 - [ ] PN bei Ban

@@ -27,6 +27,7 @@ client.on('ready', () => {
 
 // LOG für eine gelöschte Nachricht
 client.on('messageDelete', (message) => {
+    if (message.author.id == "268478587651358721") return;
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
 
@@ -35,7 +36,8 @@ client.on('messageDelete', (message) => {
             .setTitle("Nachricht gelöscht!")
             .setColor(0x00AE86)
             .addField("Channel", message.channel.name + "/" + message.channel.id)
-            .addField("Server", message.guild.name + "/" + message.guild.id)
+            .addField("User", message.author.tag + "/" + message.author.id)
+            // .addField("Server", message.guild.name + "/" + message.guild.id)
             .addField("Nachricht", "```" + message.content + "```");
 
         // Nachricht senden
@@ -60,12 +62,96 @@ client.on('messageUpdate', (message) => {
             .addField("Before:", "```" + message.edits[0] + "```")
             .setFooter("Discord Log Bot " + config.version)
             .addField("Channel", message.channel.name + "/" + message.channel.id)
-            .addField("Server", message.guild.name + "/" + message.guild.id)
+            // .addField("Server", message.guild.name + "/" + message.guild.id)
             .setTimestamp();
 
         // Nachrichten senden, zuerst oben, dann unten
-        logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet")
+        logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet!")
             .then(() => logChannel.send({ embed: messageUpdateE }));
+    }
+});
+
+client.on('message', (message) => {
+
+    // Checken ob die Nachricht aus einer Guild kam
+    if (!message.guild) return;
+
+    // Warten auf ne !mute Nachricht
+    if (message.content.startsWith("!mute")) {
+
+        // Schauen ob der Message.Author die Moderator Rolle hat
+        if (!message.member.roles.has("536612048377741332")) return;
+
+        // Den User aus dem Tag bekommen
+        const user = message.mentions.users.first();
+
+        // Wenn es einen User gibt weiter machen
+        if (user) {
+
+            // Den Guild Member aus dem User bekommen
+            const member = message.guild.member(user);
+
+            // Wenn es ein Guild member ist, weiter machen
+            if (member) {
+
+                // Role hinzufügen
+                member.addRole("538081337798688788");
+
+                // Bestätigung senden
+                message.channel.send(member + "wurde gemuted");
+
+                // Embed generieren
+                let muteEmbed = new Discord.RichEmbed()
+                    .setTitle("Ein User wurde gemuted")
+                    .setColor(0x30add3)
+                    .addField("Moderator", message.author.tag + "/" + message.author.id)
+                    .addField("Muted", member.tag + "/" + member.id)
+                    .setFooter("Discord Log Bot " + config.version)
+                    .setTimestamp();
+
+                // Embed in den LOG schicken
+                logChannel.send({ embed: muteEmbed });
+            }
+        }
+    }
+
+    // UNMUTE Command
+    if (message.content.startsWith("!unmute")) {
+
+        // Schauen ob der Message.Author die Moderator Rolle hat
+        if (!message.member.roles.has("536612048377741332")) return; //TODO: Hier mal schauen
+
+        // Den User aus dem Tag bekommen
+        const user = message.mentions.users.first();
+
+        // Wenn es einen User gibt weiter machen
+        if (user) {
+
+            // Den Guild Member aus dem User bekommen
+            const member = message.guild.member(user);
+
+            // Wenn es ein Guild member ist, weiter machen
+            if (member) {
+
+                // Role entfernen
+                member.removeRole("538081337798688788");
+
+                // Bestätigung senden
+                message.channel.send(member + "wurde entmuted");
+
+                // Embed generieren
+                let muteEmbed = new Discord.RichEmbed()
+                    .setTitle("Ein User wurde entmuted")
+                    .setColor(0x30add3)
+                    .addField("Moderator", message.author.tag + "/" + message.author.id)
+                    .addField("Entmuted", member.tag + "/" + member.id)
+                    .setFooter("Discord Log Bot " + config.version)
+                    .setTimestamp();
+
+                // Embed in den LOG schicken
+                logChannel.send({ embed: muteEmbed });
+            }
+        }
     }
 });
 

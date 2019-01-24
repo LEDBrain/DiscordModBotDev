@@ -1,6 +1,8 @@
 // Discord Client erstellen
 const Discord = require('discord.js');
 const client = new Discord.Client();
+
+//Erster LOG Channel schritt
 let logChannel;
 
 // Config holen
@@ -8,7 +10,7 @@ const config = require("./config/config");
 
 client.on('ready', () => {
 
-    // LOG Channel holen
+    // LOG Channel holen (2. LOG Channel Schritt)
     logChannel = client.channels.get(config.logChannel);
     // Client Username anzeigen
     console.log("Verbunden als " + client.user.tag);
@@ -25,6 +27,7 @@ client.on('ready', () => {
 
 // LOG für eine gelöschte Nachricht
 client.on('messageDelete', (message) => {
+    // Schauen ob der LOG Channel da ist
     if (logChannel) {
 
         // Embed generieren

@@ -1,12 +1,15 @@
 // Discord Client erstellen
 const Discord = require('discord.js');
 const client = new Discord.Client();
+let logChannel;
 
 // Config holen
 const config = require("./config/config");
 
 client.on('ready', () => {
 
+    // LOG Channel holen
+    logChannel = client.channels.get(config.logChannel);
     // Client Username anzeigen
     console.log("Verbunden als " + client.user.tag);
 
@@ -22,44 +25,45 @@ client.on('ready', () => {
 
 // LOG für eine gelöschte Nachricht
 client.on('messageDelete', (message) => {
-    // LOG Channel holen
-    const logChannel = client.channels.get(config.logChannel);
+    if (logChannel) {
 
-    // Embed generieren
-    let messageDeleteE = new Discord.RichEmbed()
-        .setTitle("Nachricht gelöscht!")
-        .setColor(0x00AE86)
-        .addField("Channel", message.channel.name + "/" + message.channel.id)
-        .addField("Server", message.guild.name + "/" + message.guild.id)
-        .addField("Nachricht", "```" + message.content + "```");
+        // Embed generieren
+        let messageDeleteE = new Discord.RichEmbed()
+            .setTitle("Nachricht gelöscht!")
+            .setColor(0x00AE86)
+            .addField("Channel", message.channel.name + "/" + message.channel.id)
+            .addField("Server", message.guild.name + "/" + message.guild.id)
+            .addField("Nachricht", "```" + message.content + "```");
 
-    // Nachricht senden
-    logChannel.send({ embed: messageDeleteE });
+        // Nachricht senden
+        logChannel.send({ embed: messageDeleteE });
+    }
 });
 
 // LOG für bearbeitete Nachricht
 client.on('messageUpdate', (message) => {
+    if (logChannel) {
 
-    // Nicht auf eigene Nachrichten antworten (kam vor)
-    if (message.author === client.user) return;
+        // Nicht auf eigene Nachrichten antworten (kam vor)
+        if (message.author === client.user) return;
 
-    // LOG Channel getten
-    const logChannel = client.channels.get(config.logChannel);
+        // LOG Channel getten
+        const logChannel = client.channels.get(config.logChannel);
 
-    // Embed generieren
-    let messageUpdateE = new Discord.RichEmbed()
-        .setTitle("Nachrichtenverlauf")
-        .setColor(0x30add3)
-        .addField("Before:", "```" + message.edits[0] + "```")
-        .setFooter("Discord Log Bot " + config.version)
-        .addField("Channel", message.channel.name + "/" + message.channel.id)
-        .addField("Server", message.guild.name + "/" + message.guild.id)
-        .setTimestamp();
+        // Embed generieren
+        let messageUpdateE = new Discord.RichEmbed()
+            .setTitle("Nachrichtenverlauf")
+            .setColor(0x30add3)
+            .addField("Before:", "```" + message.edits[0] + "```")
+            .setFooter("Discord Log Bot " + config.version)
+            .addField("Channel", message.channel.name + "/" + message.channel.id)
+            .addField("Server", message.guild.name + "/" + message.guild.id)
+            .setTimestamp();
 
-    // Nachrichten senden, zuerst oben, dann unten
-    logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet")
-        .then(() => logChannel.send({ embed: messageUpdateE }));
+        // Nachrichten senden, zuerst oben, dann unten
+        logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet")
+            .then(() => logChannel.send({ embed: messageUpdateE }));
+    }
 });
-
 
 client.login(config.clientToken);

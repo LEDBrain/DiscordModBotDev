@@ -83,7 +83,7 @@ client.on('message', (message) => {
         if (!message.member.roles.has("536612048377741332")) {
 
             // Reply für keine Berechtigungen
-            message.channel.reply("du hast leider keine Berechtigung für diesen Command")
+            message.reply("du hast leider keine Berechtigung für diesen Command")
 
             // LOG zum Stalken
             let nopermsEmbed = new Discord.RichEmbed()
@@ -96,6 +96,8 @@ client.on('message', (message) => {
 
             // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
+
+            return
 
         };
 
@@ -139,7 +141,7 @@ client.on('message', (message) => {
         if (!message.member.roles.has("536612048377741332")) {
 
             // Reply für keine Berechtigungen
-            message.channel.reply("du hast leider keine Berechtigung für diesen Command")
+            message.reply("du hast leider keine Berechtigung für diesen Command")
 
             // LOG zum Stalken
             let nopermsEmbed = new Discord.RichEmbed()
@@ -152,6 +154,8 @@ client.on('message', (message) => {
 
             // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
+
+            return
 
         };
 

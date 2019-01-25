@@ -81,6 +81,8 @@ client.on('message', (message) => {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
         if (!message.member.roles.has("536612048377741332")) {
+
+            // Reply für keine Berechtigungen
             message.channel.reply("du hast leider keine Berechtigung für diesen Command")
 
             // LOG zum Stalken
@@ -92,6 +94,7 @@ client.on('message', (message) => {
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
+            // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
 
         };
@@ -112,7 +115,7 @@ client.on('message', (message) => {
                 member.addRole("538081337798688788");
 
                 // Bestätigung senden
-                message.channel.send(member + "wurde gemuted");
+                message.channel.send(member + " wurde gemuted");
 
                 // Embed generieren
                 let muteEmbed = new Discord.RichEmbed()
@@ -134,6 +137,8 @@ client.on('message', (message) => {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
         if (!message.member.roles.has("536612048377741332")) {
+
+            // Reply für keine Berechtigungen
             message.channel.reply("du hast leider keine Berechtigung für diesen Command")
 
             // LOG zum Stalken
@@ -145,6 +150,7 @@ client.on('message', (message) => {
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
+            // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
 
         };
@@ -165,7 +171,7 @@ client.on('message', (message) => {
                 member.removeRole("538081337798688788");
 
                 // Bestätigung senden
-                message.channel.send(member + "wurde entmuted");
+                message.channel.send(member + " wurde entmuted");
 
                 // Embed generieren
                 let muteEmbed = new Discord.RichEmbed()

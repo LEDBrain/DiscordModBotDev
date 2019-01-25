@@ -191,6 +191,16 @@ client.on('message', (message) => {
             }
         }
     }
+
+    if (message.content == "!random") {
+        var random = Math.random()
+
+        if (random < "0.5") {
+            message.channel.send("Kopf!");
+        } else if (random > "0.5") {
+            message.channel.send("Zahl!");
+        }
+    }
 });
 
 client.login(config.clientToken);

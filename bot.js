@@ -80,7 +80,21 @@ client.on('message', (message) => {
     if (message.content.startsWith("!mute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
-        if (!message.member.roles.has("536612048377741332")) return;
+        if (!message.member.roles.has("536612048377741332")) {
+            message.channel.reply("du hast leider keine Berechtigung für diesen Command")
+
+            // LOG zum Stalken
+            let nopermsEmbed = new Discord.RichEmbed()
+                .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
+                .setColor()
+                .addField("Channel", message.channel.name + "/" + message.channel.id)
+                .addField("User", message.author.tag + "/" + message.author.id)
+                .setFooter("Discord Log Bot " + config.version)
+                .setTimestamp();
+
+            logChannel.send({ embed: nopermsEmbed });
+
+        };
 
         // Den User aus dem Tag bekommen
         const user = message.mentions.users.first();
@@ -119,7 +133,21 @@ client.on('message', (message) => {
     if (message.content.startsWith("!unmute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
-        if (!message.member.roles.has("536612048377741332")) return; //TODO: Hier mal schauen
+        if (!message.member.roles.has("536612048377741332")) {
+            message.channel.reply("du hast leider keine Berechtigung für diesen Command")
+
+            // LOG zum Stalken
+            let nopermsEmbed = new Discord.RichEmbed()
+                .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
+                .setColor()
+                .addField("Channel", message.channel.name + "/" + message.channel.id)
+                .addField("User", message.author.tag + "/" + message.author.id)
+                .setFooter("Discord Log Bot " + config.version)
+                .setTimestamp();
+
+            logChannel.send({ embed: nopermsEmbed });
+
+        };
 
         // Den User aus dem Tag bekommen
         const user = message.mentions.users.first();

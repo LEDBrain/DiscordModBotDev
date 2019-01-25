@@ -4,7 +4,7 @@
 - [x] ModLog Edit
 - [x] ModLog Delete
 - [x] Mute Command
-- [ ] Line 122
+- [x] Line 122 (if erweitert)
 - [ ] Verwarnungssystem + JSON
 - [ ] Ban System (Reactions?)
 - [ ] PN bei Ban

@@ -83,7 +83,7 @@ client.on('message', (message) => {
         if (!message.member.roles.has("536612048377741332")) {
 
             // Reply für keine Berechtigungen
-            message.reply("du hast leider keine Berechtigung für diesen Command")
+            message.reply("du hast leider keine Berechtigung für diesen Command");
 
             // LOG zum Stalken
             let nopermsEmbed = new Discord.RichEmbed()
@@ -97,9 +97,9 @@ client.on('message', (message) => {
             // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
 
-            return
+            return;
 
-        };
+        }
 
         // Den User aus dem Tag bekommen
         const user = message.mentions.users.first();
@@ -141,7 +141,7 @@ client.on('message', (message) => {
         if (!message.member.roles.has("536612048377741332")) {
 
             // Reply für keine Berechtigungen
-            message.reply("du hast leider keine Berechtigung für diesen Command")
+            message.reply("du hast leider keine Berechtigung für diesen Command");
 
             // LOG zum Stalken
             let nopermsEmbed = new Discord.RichEmbed()
@@ -155,9 +155,9 @@ client.on('message', (message) => {
             // Ins LOG senden
             logChannel.send({ embed: nopermsEmbed });
 
-            return
+            return;
 
-        };
+        }
 
         // Den User aus dem Tag bekommen
         const user = message.mentions.users.first();
@@ -193,7 +193,7 @@ client.on('message', (message) => {
     }
 
     if (message.content == "!random") {
-        var random = Math.random()
+        var random = Math.random();
 
         if (random < "0.5") {
             message.channel.send("Kopf!");

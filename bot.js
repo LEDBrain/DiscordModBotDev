@@ -49,6 +49,8 @@ client.on('messageDelete', (message) => {
 client.on('messageUpdate', (message) => {
     if (logChannel) {
 
+        if (message.author.id == "268478587651358721") return;
+
         // Nicht auf eigene Nachrichten antworten (kam vor)
         if (message.author === client.user) return;
 

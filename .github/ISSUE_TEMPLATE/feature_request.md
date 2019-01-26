@@ -7,14 +7,11 @@ assignees: KokosnussDEV
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Wie kamst du auf die Idee dieses Features**
+Bitte eine genaue Beschreibung!
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Deine Lösung**
+Eine klare und konkrete Beschreibung über das, was passieren soll!
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
-
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Anderes**
+Andere Dinge die du gerne loswerden willst (über das Feature versteht sich)

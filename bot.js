@@ -31,14 +31,14 @@ client.on('messageDelete', (message) => {
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
 
+        let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
         // Embed generieren
         let messageDeleteE = new Discord.RichEmbed()
             .setTitle("Nachricht gelöscht!")
             .setColor(0x00AE86)
-            .addField("Channel", message.channel.name + "/" + message.channel.id)
-            .addField("User", message.author.tag + "/" + message.author.id)
-            // .addField("Server", message.guild.name + "/" + message.guild.id)
-            .addField("Nachricht", "```" + message.content + "```");
+            .setDescription("Nachricht\n ```" + message.content + "```\n User\n" + message.author.tag.toString() + "\n\n [Zum Channel]" + "(" + linkChannel + ")")
+            .setFooter("Discord Log Bot " + config.version)
+            .setTimestamp();
 
         // Nachricht senden
         logChannel.send({ embed: messageDeleteE });
@@ -55,19 +55,17 @@ client.on('messageUpdate', (message) => {
         // LOG Channel getten
         const logChannel = client.channels.get(config.logChannel);
 
+        let linkMessage = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + message.id;
         // Embed generieren
         let messageUpdateE = new Discord.RichEmbed()
-            .setTitle("Nachrichtenverlauf")
+            .setTitle("Nachricht editiert!")
             .setColor(0x30add3)
-            .addField("Before:", "```" + message.edits[0] + "```")
+            .setDescription("Ursprüngliche Nachricht:\n ```" + message.edits[0] + "```\n" + "[Zum Beitrag]" + "(" + linkMessage + ")")
             .setFooter("Discord Log Bot " + config.version)
-            .addField("Channel", message.channel.name + "/" + message.channel.id)
-            // .addField("Server", message.guild.name + "/" + message.guild.id)
             .setTimestamp();
 
         // Nachrichten senden, zuerst oben, dann unten
-        logChannel.send("Eine Nachricht wurde in " + message.channel.name + "/" + message.channel.id + " bearbeitet!")
-            .then(() => logChannel.send({ embed: messageUpdateE }));
+        logChannel.send({ embed: messageUpdateE });
     }
 });
 

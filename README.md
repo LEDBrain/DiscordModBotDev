@@ -1,4 +1,11 @@
-# DiscordLogBot
+# DiscordLogBot Install
+First clone, .then(()
+```bash
+$ cd DiscordLogBot/
+$ npm install
+$ node .
+```
+)
 
 ## TODO
 - [x] ModLog Edit

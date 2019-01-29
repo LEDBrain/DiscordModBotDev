@@ -86,10 +86,12 @@ client.on('message', (message) => {
             message.reply("du hast leider keine Berechtigung für diesen Command");
 
             // LOG zum Stalken
+            let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
+
             let nopermsEmbed = new Discord.RichEmbed()
                 .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
                 .setColor()
-                .addField("Channel", message.channel.name + "/" + message.channel.id)
+                .addField("Channel", linkChannel)
                 .addField("User", message.author.tag + "/" + message.author.id)
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
@@ -123,8 +125,8 @@ client.on('message', (message) => {
                 let muteEmbed = new Discord.RichEmbed()
                     .setTitle("Ein User wurde gemuted")
                     .setColor(0x30add3)
-                    .addField("Moderator", message.author.tag + "/" + message.author.id)
-                    .addField("Muted", member.tag + "/" + member.id)
+                    .addField("Moderator", message.author.username + "/" + message.author.id)
+                    .addField("Muted", member.username + "/" + member.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 
@@ -144,11 +146,12 @@ client.on('message', (message) => {
             message.reply("du hast leider keine Berechtigung für diesen Command");
 
             // LOG zum Stalken
+            let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
             let nopermsEmbed = new Discord.RichEmbed()
                 .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
                 .setColor()
-                .addField("Channel", message.channel.name + "/" + message.channel.id)
-                .addField("User", message.author.tag + "/" + message.author.id)
+                .addField("Channel", linkChannel)
+                .addField("User", message.author.username + "/" + message.author.id)
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
@@ -181,8 +184,8 @@ client.on('message', (message) => {
                 let muteEmbed = new Discord.RichEmbed()
                     .setTitle("Ein User wurde entmuted")
                     .setColor(0x30add3)
-                    .addField("Moderator", message.author.tag + "/" + message.author.id)
-                    .addField("Entmuted", member.tag + "/" + member.id)
+                    .addField("Moderator", message.author.username + "/" + message.author.id)
+                    .addField("Entmuted", member.username + "/" + member.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 

@@ -12,6 +12,7 @@ $ node .
 - [x] ModLog Delete
 - [x] Mute Command
 - [x] Line 122 (if erweitert)
+- [x] Kick System
 - [ ] Verwarnungssystem + JSON
 - [ ] Ban System (Reactions?)
 - [ ] PN bei Ban

@@ -1,6 +1,7 @@
 // Discord Client erstellen
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const async = require("async");
 
 //Erster LOG Channel schritt
 let logChannel;
@@ -26,7 +27,7 @@ client.on('ready', () => {
 });
 
 // LOG für eine gelöschte Nachricht
-client.on('messageDelete', (message) => {
+/* client.on('messageDelete', async(message) => {
     if (message.author.id == "268478587651358721") return;
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
@@ -43,7 +44,19 @@ client.on('messageDelete', (message) => {
         // Nachricht senden
         logChannel.send({ embed: messageDeleteE });
     }
-});
+
+    const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
+    let user = ""
+    if (entry.extra.channel.id === message.channel.id &&
+        (entry.target.id === message.author.id) &&
+        (entry.createdTimestamp > (Date.now() - 5000)) &&
+        (entry.extra.count >= 1)) {
+        user = entry.executor.username
+    } else {
+        user = message.author.username
+    }
+    logChannel.send('A message was deleted in ${message.channel.name} by ${user}');
+}); */
 
 // LOG für bearbeitete Nachricht
 client.on('messageUpdate', (message) => {
@@ -195,7 +208,27 @@ client.on('message', (message) => {
         }
     }
 
-    if (message.content == "!random") {
+    if (message.content.startsWith(config.prefix + "kick")) {
+
+        const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+
+        let member = message.mentions.members.first();
+
+        let reason = args.slice(2).join(" ");
+
+        let kickEmbed = new Discord.RichEmbed()
+            .setTitle("Ein Mitglied wurde gekickt")
+            .setColor(0xf4eb42)
+            .addField("Member", member.user + "/" + member.id, true)
+            .addField("Moderator", message.author.username, true)
+            .addBlankField()
+            .addField("Grund", "```" + reason + "```", true);
+
+        member.kick(reason)
+            .then(() => logChannel.send({ embed: kickEmbed }));
+    }
+
+    if (message.content == config.prefix + "random") {
         var random = Math.random();
 
         if (random < "0.5") {

@@ -212,11 +212,26 @@ client.on('message', (message) => {
 
     if (message.content.startsWith(config.prefix + "kick")) {
 
+        if (!message.member.roles.has("536612048377741332")) {
+            message.channel.send("Du hast leider keine Berechtigungen!");
+            return;
+        }
+
         const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
 
         let member = message.mentions.members.first();
 
+        if (!member) {
+            message.channel.send("Bitte gebe ein User an! Format: `!kick <@user> <Grund>`");
+            return;
+        }
+
         let reason = args.slice(2).join(" ");
+
+        if (!reason) {
+            message.channel.send("Bitte gebe einen Grund an! Format: `!kick <@user> <Grund>`");
+            return;
+        }
 
         let kickEmbed = new Discord.RichEmbed()
             .setTitle("Ein Mitglied wurde gekickt")

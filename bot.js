@@ -60,6 +60,8 @@ client.on('ready', () => {
 
 // LOG für bearbeitete Nachricht
 client.on('messageUpdate', (message) => {
+    if (message.channel.id == "537008838608551936") return;
+
     if (logChannel) {
 
         if (message.author.id == "268478587651358721") return;
@@ -222,7 +224,8 @@ client.on('message', (message) => {
             .addField("Member", member.user + "/" + member.id, true)
             .addField("Moderator", message.author.username, true)
             .addBlankField()
-            .addField("Grund", "```" + reason + "```", true);
+            .addField("Grund", "```" + reason + "```", true)
+            .setTimestamp();
 
         member.kick(reason)
             .then(() => logChannel.send({ embed: kickEmbed }));

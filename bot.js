@@ -110,7 +110,7 @@ client.on('message', (message) => {
                 .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
                 .setColor()
                 .addField("Channel", linkChannel)
-                .addField("User", message.author.tag + "/" + message.author.id)
+                .addField("User", message.author + "/" + message.author.id)
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
@@ -143,8 +143,8 @@ client.on('message', (message) => {
                 let muteEmbed = new Discord.RichEmbed()
                     .setTitle("Ein User wurde gemuted")
                     .setColor(0x30add3)
-                    .addField("Moderator", message.author.username + "/" + message.author.id)
-                    .addField("Muted", member.name + "/" + member.id)
+                    .addField("Moderator", message.author + "/" + message.author.id)
+                    .addField("Muted", member.user.username + "/" + member.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 
@@ -169,7 +169,7 @@ client.on('message', (message) => {
                 .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
                 .setColor()
                 .addField("Channel", linkChannel)
-                .addField("User", message.author.username + "/" + message.author.id)
+                .addField("User", message.author + "/" + message.author.id)
                 .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
@@ -202,8 +202,8 @@ client.on('message', (message) => {
                 let muteEmbed = new Discord.RichEmbed()
                     .setTitle("Ein User wurde entmuted")
                     .setColor(0x30add3)
-                    .addField("Moderator", message.author.username + "/" + message.author.id)
-                    .addField("Entmuted", member.name + "/" + member.id)
+                    .addField("Entmuted", member.user.username + "/" + member.id)
+                    .addField("Moderator", message.author + "/" + message.author.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 
@@ -240,7 +240,7 @@ client.on('message', (message) => {
             .setTitle("Ein Mitglied wurde gekickt")
             .setColor(0xf4eb42)
             .addField("Member", member.user + "/" + member.id, true)
-            .addField("Moderator", message.author.username, true)
+            .addField("Moderator", message.author, true)
             .addBlankField()
             .addField("Grund", "```" + reason + "```", true)
             .setFooter("Discord Log Bot " + config.version)
@@ -279,13 +279,37 @@ client.on('message', (message) => {
                 warns = 1;
                 db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(warns) + ")", function(error) {
                     if (error) throw (error);
-                    message.channel.send("Erfolg1!");
+                    message.channel.send(member.user + " wurde zum ersten mal verwarnt");
+
+                    let firstWarnEmbed = new Discord.RichEmbed()
+                        .setTitle("Ein User wurde das erste mal verwarnt!")
+                        .setColor(0xf4eb42)
+                        .addField("User", member.user + "/" + member.id)
+                        .addField("Moderator", message.author + "/" + message.author.id)
+                        .addField("Warns", warns)
+                        .addField("Grund", "```" + reason + "```")
+                        .setFooter("Discord Log Bot " + config.version)
+                        .setTimestamp();
+
+                    logChannel.send({ embed: firstWarnEmbed });
                 });
             } else {
                 warns = result[0].warns + 1;
                 db.query("UPDATE `warnungen` SET `warns` =  " + db.escape(warns) + " WHERE `id` = " + db.escape(member.id), function(error) {
                     if (error) throw (error);
-                    message.channel.send("Erfolg2!");
+                    message.channel.send(member.user + " wurde verwarnt. Jetzige Warns: " + warns);
+
+                    let warnEmbed = new Discord.RichEmbed()
+                        .setTitle("Ein User wurde verwarnt!")
+                        .setColor(0xf4eb42)
+                        .addField("User", member.user + "/" + member.id)
+                        .addField("Moderator", message.author + "/" + message.author.id)
+                        .addField("Warns", warns)
+                        .addField("Grund", "```" + reason + "```")
+                        .setFooter("Discord Log Bot " + config.version)
+                        .setTimestamp();
+
+                    logChannel.send({ embed: warnEmbed });
                 });
             }
         });

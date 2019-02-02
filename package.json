@@ -5,9 +5,10 @@
     "main": "bot.js",
     "private": true,
     "dependencies": {
+        "async": "latest",
         "discord.js": "latest",
         "fs": "latest",
-        "async": "latest"
+        "mysql": "latest"
     },
     "author": "KokosnussDEV"
 }

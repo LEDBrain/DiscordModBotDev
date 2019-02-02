@@ -9,6 +9,9 @@ let logChannel;
 // Config holen
 const config = require("./config/config");
 
+// DB
+const db = require("./config/db");
+
 client.on('ready', () => {
 
     // LOG Channel holen (2. LOG Channel Schritt)
@@ -92,13 +95,13 @@ client.on('message', (message) => {
     if (!message.guild) return;
 
     // Warten auf ne !mute Nachricht
-    if (message.content.startsWith("!mute")) {
+    if (message.content.startsWith(config.prefix + "mute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
         if (!message.member.roles.has("536612048377741332")) {
 
             // Reply für keine Berechtigungen
-            message.reply("du hast leider keine Berechtigung für diesen Command");
+            message.reply(" du hast leider keine Berechtigung für diesen Command");
 
             // LOG zum Stalken
             let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
@@ -141,7 +144,7 @@ client.on('message', (message) => {
                     .setTitle("Ein User wurde gemuted")
                     .setColor(0x30add3)
                     .addField("Moderator", message.author.username + "/" + message.author.id)
-                    .addField("Muted", member.username + "/" + member.id)
+                    .addField("Muted", member.name + "/" + member.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 
@@ -152,7 +155,7 @@ client.on('message', (message) => {
     }
 
     // UNMUTE Command
-    if (message.content.startsWith("!unmute")) {
+    if (message.content.startsWith(config.prefix + "unmute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
         if (!message.member.roles.has("536612048377741332")) {
@@ -200,7 +203,7 @@ client.on('message', (message) => {
                     .setTitle("Ein User wurde entmuted")
                     .setColor(0x30add3)
                     .addField("Moderator", message.author.username + "/" + message.author.id)
-                    .addField("Entmuted", member.username + "/" + member.id)
+                    .addField("Entmuted", member.name + "/" + member.id)
                     .setFooter("Discord Log Bot " + config.version)
                     .setTimestamp();
 
@@ -240,10 +243,52 @@ client.on('message', (message) => {
             .addField("Moderator", message.author.username, true)
             .addBlankField()
             .addField("Grund", "```" + reason + "```", true)
+            .setFooter("Discord Log Bot " + config.version)
             .setTimestamp();
 
         member.kick(reason)
             .then(() => logChannel.send({ embed: kickEmbed }));
+    }
+
+    if (message.content.startsWith(config.prefix + "warn")) {
+
+        if (!message.member.roles.has("536612048377741332")) {
+            message.channel.send("Du hast leider keine Berechtigungen!");
+            return;
+        }
+
+        const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+
+        let member = message.mentions.members.first();
+
+        if (!member) {
+            message.channel.send("Bitte gebe ein User an! Format: `!warn <@user> <Grund>`");
+            return;
+        }
+
+        let reason = args.slice(2).join(" ");
+
+        if (!reason) {
+            message.channel.send("Bitte gebe einen Grund an! Format: `!warn <@user> <Grund>`");
+            return;
+        }
+
+        var warnMember = "INSERT INTO `warnungen` (`id`, `username`, `warns`)";
+        var warn = db.query();
+        var warns = warn++;
+        let warnEmbed = new Discord.RichEmbed()
+            .setTitle("Ein user wurde Verwarnt!")
+            .setColor(0x30add3)
+            .addField("User", member.name + "/" + member.id)
+            .addField("Moderator", message.author.username + "/" + message.author.id)
+            .addField("Warns gesamt", warns)
+            .setFooter("Discord Log Bot " + config.version)
+            .setTimestamp();
+
+        db.query(warnMember + "VALUE ('" + member.id + "', '" + member.name + "', '" + warns + "')");
+        message.channel.send(member.name + "wurde Verwarnt!")
+            .then(() => logChannel.send({ embed: warnEmbed }));
+
     }
 
     if (message.content == config.prefix + "random") {

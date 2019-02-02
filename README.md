@@ -1,4 +1,5 @@
 # DiscordLogBot Install
+
 First clone, .then(()
 ```bash
 $ cd DiscordLogBot/

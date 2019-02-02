@@ -1,4 +1,7 @@
 # DiscordLogBot Install
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b8272284211e4b15b6475252a94a43c2)](https://app.codacy.com/app/KokosnussDEV/DiscordLogBot?utm_source=github.com&utm_medium=referral&utm_content=LSS-Comm-Serv/DiscordLogBot&utm_campaign=Badge_Grade_Settings)
+
 First clone, .then(()
 ```bash
 $ cd DiscordLogBot/

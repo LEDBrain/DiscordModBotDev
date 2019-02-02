@@ -273,21 +273,22 @@ client.on('message', (message) => {
             return;
         }
 
-        var warnMember = "INSERT INTO `warnungen` (`id`, `username`, `warns`)";
-        var warn = db.query();
-        var warns = warn++;
-        let warnEmbed = new Discord.RichEmbed()
-            .setTitle("Ein user wurde Verwarnt!")
-            .setColor(0x30add3)
-            .addField("User", member.name + "/" + member.id)
-            .addField("Moderator", message.author.username + "/" + message.author.id)
-            .addField("Warns gesamt", warns)
-            .setFooter("Discord Log Bot " + config.version)
-            .setTimestamp();
-
-        db.query(warnMember + "VALUE ('" + member.id + "', '" + member.name + "', '" + warns + "')");
-        message.channel.send(member.name + "wurde Verwarnt!")
-            .then(() => logChannel.send({ embed: warnEmbed }));
+        db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
+            if (err) throw (err);
+            if (!result[0]) {
+                warns = 1;
+                db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(warns) + ")", function(error) {
+                    if (error) throw (error);
+                    message.channel.send("Erfolg1!");
+                });
+            } else {
+                warns = result[0].warns + 1;
+                db.query("UPDATE `warnungen` SET `warns` =  " + db.escape(warns) + " WHERE `id` = " + db.escape(member.id), function(error) {
+                    if (error) throw (error);
+                    message.channel.send("Erfolg2!");
+                });
+            }
+        });
 
     }
 

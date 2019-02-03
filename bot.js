@@ -290,7 +290,7 @@ client.on('message', (message) => {
                     message.channel.send(member.user + " wurde zum ersten mal verwarnt");
 
                     let firstWarnEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde das erste mal verwarnt!")
+                        .setTitle("Ein User wurde das erste Mal verwarnt!")
                         .setColor(0xf4eb42)
                         .addField("User", member.user + "/" + member.id)
                         .addField("Moderator", message.author + "/" + message.author.id)
@@ -339,7 +339,7 @@ client.on('message', (message) => {
 
         let jw = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
-            message.channel.send(member + " hat " + (result[0].warns || 0) + " Verwarnungen!");
+            message.channel.send(member + " hat " + (result[0].warns || 0) + " verwarnungen!");
         })
     }
 

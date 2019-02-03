@@ -8,7 +8,11 @@ let config = {
     "modrole": "536612048377741332",
     "muterole": "538081337798688788",
     "drss": "268478587651358721",
-    "gitdates": "537008838608551936"
+    "gitdates": "537008838608551936",
+    "host": "localhost",
+    "user": "mod",
+    "password": "wA38K5a!",
+    "database": "mod"
 };
 console.log(config);
 

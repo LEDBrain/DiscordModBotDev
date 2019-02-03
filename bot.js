@@ -130,6 +130,11 @@ client.on('message', (message) => {
             // Den Guild Member aus dem User bekommen
             const member = message.guild.member(user);
 
+            if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+                message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+                return;
+            }
+
             // Wenn es ein Guild member ist, weiter machen
             if (member) {
 
@@ -189,6 +194,11 @@ client.on('message', (message) => {
             // Den Guild Member aus dem User bekommen
             const member = message.guild.member(user);
 
+            if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+                message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+                return;
+            }
+
             // Wenn es ein Guild member ist, weiter machen
             if (member) {
 
@@ -229,6 +239,11 @@ client.on('message', (message) => {
             return;
         }
 
+        if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+            message.channel.send("Du kannst keine Administratoren oder Moderatoren kicken!");
+            return;
+        }
+
         let reason = args.slice(2).join(" ");
 
         if (!reason) {
@@ -263,6 +278,11 @@ client.on('message', (message) => {
 
         if (!member) {
             message.channel.send("Bitte gebe ein User an! Format: `!warn <@user> <Grund>`");
+            return;
+        }
+
+        if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+            message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
             return;
         }
 

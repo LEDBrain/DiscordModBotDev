@@ -53,6 +53,8 @@ client.on('messageDelete', async(message) => {
 client.on('messageUpdate', (message) => {
     if (message.channel.id == config.gitdates) return;
 
+    if (message.edits[0] == message.content) return;
+
     if (logChannel) {
 
         if (message.author.id == config.drss) return;
@@ -78,6 +80,10 @@ client.on('messageUpdate', (message) => {
 });
 
 client.on('message', (message) => {
+
+    if (message.content.startsWith(config.prefix + "help")) {
+
+    }
 
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;

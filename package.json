@@ -7,7 +7,6 @@
     "dependencies": {
         "async": "latest",
         "discord.js": "latest",
-        "fs": "latest",
         "mysql": "latest"
     },
     "author": "KokosnussDEV"

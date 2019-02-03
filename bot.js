@@ -40,7 +40,7 @@ client.on('messageDelete', async(message) => {
         let messageDeleteE = new Discord.RichEmbed()
             .setTitle("Nachricht gelöscht!")
             .setColor(0x00AE86)
-            .setDescription("Nachricht\n ```" + message.content + "```\n User\n" + message.author.tag.toString() + "\n\n [Zum Channel]" + "(" + linkChannel + ")")
+            .setDescription("Nachricht\n ```" + message.content + "```\n User\n" + message.author + "\n\n [Zum Channel]" + "(" + linkChannel + ")")
             .setFooter("Discord Log Bot " + config.version)
             .setTimestamp();
 
@@ -81,7 +81,18 @@ client.on('messageUpdate', (message) => {
 
 client.on('message', (message) => {
 
-    if (message.content.startsWith(config.prefix + "help")) {
+    if (message.content == config.prefix + "help") {
+        let helpEmbed = new Discord.RichEmbed()
+            .setTitle("Hilfe!!")
+            .addField("Übersicht aller Commands:", "```" + config.prefix + "(un-)mute, " + config.prefix + "kick, " + config.prefix + "ban (noch in arbeit), " + config.prefix + "warn```")
+            .addBlankField()
+            .addField(config.prefix + "mute", "`" + config.prefix + "(un-)mute/ @<user>`")
+            .addField(config.prefix + "kick", "`" + config.prefix + "kick @<user> <Grund>`")
+            .addField(config.prefix + "ban", "`" + config.prefix + "ban @<user> <Grund>`")
+            .addField(config.prefix + "warn", "`" + config.prefix + "warn @<user> <Grund>`")
+            .setTimestamp();
+
+        message.channel.send({ embed: helpEmbed });
 
     }
 

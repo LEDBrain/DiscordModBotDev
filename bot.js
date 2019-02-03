@@ -30,8 +30,8 @@ client.on('ready', () => {
 });
 
 // LOG für eine gelöschte Nachricht
-/* client.on('messageDelete', async(message) => {
-    if (message.author.id == "268478587651358721") return;
+client.on('messageDelete', async(message) => {
+    if (message.author.id == config.drss) return;
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
 
@@ -47,27 +47,15 @@ client.on('ready', () => {
         // Nachricht senden
         logChannel.send({ embed: messageDeleteE });
     }
-
-    const entry = await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' }).then(audit => audit.entries.first());
-    let user = ""
-    if (entry.extra.channel.id === message.channel.id &&
-        (entry.target.id === message.author.id) &&
-        (entry.createdTimestamp > (Date.now() - 5000)) &&
-        (entry.extra.count >= 1)) {
-        user = entry.executor.username
-    } else {
-        user = message.author.username
-    }
-    logChannel.send('A message was deleted in ${message.channel.name} by ${user}');
-}); */
+});
 
 // LOG für bearbeitete Nachricht
 client.on('messageUpdate', (message) => {
-    if (message.channel.id == "537008838608551936") return;
+    if (message.channel.id == config.gitdates) return;
 
     if (logChannel) {
 
-        if (message.author.id == "268478587651358721") return;
+        if (message.author.id == config.drss) return;
 
         // Nicht auf eigene Nachrichten antworten (kam vor)
         if (message.author === client.user) return;
@@ -98,7 +86,7 @@ client.on('message', (message) => {
     if (message.content.startsWith(config.prefix + "mute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
-        if (!message.member.roles.has("536612048377741332")) {
+        if (!message.member.roles.has(config.modrole)) {
 
             // Reply für keine Berechtigungen
             message.reply(" du hast leider keine Berechtigung für diesen Command");
@@ -130,7 +118,7 @@ client.on('message', (message) => {
             // Den Guild Member aus dem User bekommen
             const member = message.guild.member(user);
 
-            if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+            if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
                 message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
                 return;
             }
@@ -139,7 +127,7 @@ client.on('message', (message) => {
             if (member) {
 
                 // Role hinzufügen
-                member.addRole("538081337798688788");
+                member.addRole(config.muterole);
 
                 // Bestätigung senden
                 message.channel.send(member + " wurde gemuted");
@@ -163,7 +151,7 @@ client.on('message', (message) => {
     if (message.content.startsWith(config.prefix + "unmute")) {
 
         // Schauen ob der Message.Author die Moderator Rolle hat
-        if (!message.member.roles.has("536612048377741332")) {
+        if (!message.member.roles.has(config.modrole)) {
 
             // Reply für keine Berechtigungen
             message.reply("du hast leider keine Berechtigung für diesen Command");
@@ -194,7 +182,7 @@ client.on('message', (message) => {
             // Den Guild Member aus dem User bekommen
             const member = message.guild.member(user);
 
-            if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+            if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
                 message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
                 return;
             }
@@ -203,7 +191,7 @@ client.on('message', (message) => {
             if (member) {
 
                 // Role entfernen
-                member.removeRole("538081337798688788");
+                member.removeRole(config.muterole);
 
                 // Bestätigung senden
                 message.channel.send(member + " wurde entmuted");
@@ -225,7 +213,7 @@ client.on('message', (message) => {
 
     if (message.content.startsWith(config.prefix + "kick")) {
 
-        if (!message.member.roles.has("536612048377741332")) {
+        if (!message.member.roles.has(config.modrole)) {
             message.channel.send("Du hast leider keine Berechtigungen!");
             return;
         }
@@ -239,7 +227,7 @@ client.on('message', (message) => {
             return;
         }
 
-        if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+        if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
             message.channel.send("Du kannst keine Administratoren oder Moderatoren kicken!");
             return;
         }
@@ -267,7 +255,7 @@ client.on('message', (message) => {
 
     if (message.content.startsWith(config.prefix + "warn")) {
 
-        if (!message.member.roles.has("536612048377741332")) {
+        if (!message.member.roles.has(config.modrole)) {
             message.channel.send("Du hast leider keine Berechtigungen!");
             return;
         }
@@ -281,7 +269,7 @@ client.on('message', (message) => {
             return;
         }
 
-        if (member.roles.has("536610937252085772") || member.roles.has("536612048377741332")) {
+        if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
             message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
             return;
         }
@@ -333,7 +321,26 @@ client.on('message', (message) => {
                 });
             }
         });
+    }
 
+    if (message.content.startsWith(config.prefix + "seewarns")) {
+
+        if (!message.member.roles.has(config.modrole)) {
+            message.channel.send("Du hast leider keine Berechtigungen!");
+            return;
+        }
+
+        let member = message.mentions.members.first();
+
+        if (!member) {
+            message.channel.send("Bitte gebe ein User an! Format: `!seewarn <@user>`");
+            return;
+        }
+
+        let jw = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
+            if (err) throw err;
+            message.channel.send(member + " hat " + (result[0].warns || 0) + " Verwarnungen!");
+        })
     }
 
     if (message.content == config.prefix + "random") {

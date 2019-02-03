@@ -119,7 +119,7 @@ client.on('message', (message) => {
             const member = message.guild.member(user);
 
             if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
-                message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+                message.channel.send("Du kannst keine Administratoren oder Moderatoren muten!");
                 return;
             }
 
@@ -183,7 +183,7 @@ client.on('message', (message) => {
             const member = message.guild.member(user);
 
             if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
-                message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+                message.channel.send("Du kannst keine Administratoren oder Moderatoren entmuten!");
                 return;
             }
 

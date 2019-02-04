@@ -30,7 +30,7 @@ client.on('ready', () => {
 });
 
 // LOG für eine gelöschte Nachricht
-client.on('messageDelete', async(message) => {
+client.on('messageDelete', (message) => {
     if (message.author.id == config.drss) return;
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
@@ -51,13 +51,13 @@ client.on('messageDelete', async(message) => {
 
 // LOG für bearbeitete Nachricht
 client.on('messageUpdate', (message) => {
-    if (message.channel.id == config.gitdates) return;
+    if (message.channel.id === config.gitdates) return;
 
-    if (message.edits[0] == message.content) return;
+    if (message.edits[0] === message.content) return;
 
     if (logChannel) {
 
-        if (message.author.id == config.drss) return;
+        if (message.author.id === config.drss) return;
 
         // Nicht auf eigene Nachrichten antworten (kam vor)
         if (message.author === client.user) return;
@@ -81,7 +81,7 @@ client.on('messageUpdate', (message) => {
 
 client.on('message', (message) => {
 
-    if (message.content == config.prefix + "help") {
+    if (message.content === config.prefix + "help") {
         let helpEmbed = new Discord.RichEmbed()
             .setTitle("Hilfe!!")
             .addField("Übersicht aller Commands:", "```" + config.prefix + "(un-)mute, " + config.prefix + "kick, " + config.prefix + "ban (noch in arbeit), " + config.prefix + "warn```")
@@ -360,7 +360,7 @@ client.on('message', (message) => {
         })
     }
 
-    if (message.content == config.prefix + "random") {
+    if (message.content === config.prefix + "random") {
         var random = Math.random();
 
         if (random < "0.5") {

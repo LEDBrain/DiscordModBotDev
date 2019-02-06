@@ -4,6 +4,7 @@ module.exports = {
     do: function(params) {
         let helpEmbed = new discord.RichEmbed()
             .setTitle("Hilfe!!")
+            .setColor(0x005542)
             .addField("Übersicht aller Commands:", "```" + params.prefix + "(un-)mute, " + params.prefix + "kick, " + params.prefix + "ban (noch in arbeit), " + params.prefix + "warn```")
             .addBlankField()
             .addField(params.prefix + "mute", "`" + params.prefix + "(un-)mute/ @<user>`")

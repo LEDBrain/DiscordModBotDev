@@ -31,7 +31,9 @@ client.on('ready', () => {
 
 // LOG für eine gelöschte Nachricht
 client.on('messageDelete', (message) => {
-    if (message.author.id == config.drss) return;
+
+    if (message.author.bot) return;
+
     // Schauen ob der LOG Channel da ist
     if (logChannel) {
 
@@ -55,9 +57,9 @@ client.on('messageUpdate', (message) => {
 
     if (message.edits[0] === message.content) return;
 
-    if (logChannel) {
+    if (message.author.bot) return;
 
-        if (message.author.id === config.drss) return;
+    if (logChannel) {
 
         // Nicht auf eigene Nachrichten antworten (kam vor)
         if (message.author === client.user) return;
@@ -81,87 +83,28 @@ client.on('messageUpdate', (message) => {
 
 client.on('message', (message) => {
 
-    if (message.content === config.prefix + "help") {
-        let helpEmbed = new Discord.RichEmbed()
-            .setTitle("Hilfe!!")
-            .addField("Übersicht aller Commands:", "```" + config.prefix + "(un-)mute, " + config.prefix + "kick, " + config.prefix + "ban (noch in arbeit), " + config.prefix + "warn```")
-            .addBlankField()
-            .addField(config.prefix + "mute", "`" + config.prefix + "(un-)mute/ @<user>`")
-            .addField(config.prefix + "kick", "`" + config.prefix + "kick @<user> <Grund>`")
-            .addField(config.prefix + "ban", "`" + config.prefix + "ban @<user> <Grund>`")
-            .addField(config.prefix + "warn", "`" + config.prefix + "warn @<user> <Grund>`")
-            .setTimestamp();
-
-        message.channel.send({ embed: helpEmbed });
-
-    }
-
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;
+
+    if (message.author.bot) return;
+
+    if (message.content === config.prefix + "help") {
+
+        require('./commands/' + "help").do({
+            message: message,
+            prefix: config.prefix,
+        })
+    }
 
     // Warten auf ne !mute Nachricht
     if (message.content.startsWith(config.prefix + "mute")) {
 
-        // Schauen ob der Message.Author die Moderator Rolle hat
-        if (!message.member.roles.has(config.modrole)) {
-
-            // Reply für keine Berechtigungen
-            message.reply(" du hast leider keine Berechtigung für diesen Command");
-
-            // LOG zum Stalken
-            let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
-
-            let nopermsEmbed = new Discord.RichEmbed()
-                .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
-                .setColor()
-                .addField("Channel", linkChannel)
-                .addField("User", message.author + "/" + message.author.id)
-                .setFooter("Discord Log Bot " + config.version)
-                .setTimestamp();
-
-            // Ins LOG senden
-            logChannel.send({ embed: nopermsEmbed });
-
-            return;
-
-        }
-
-        // Den User aus dem Tag bekommen
-        const user = message.mentions.users.first();
-
-        // Wenn es einen User gibt weiter machen
-        if (user) {
-
-            // Den Guild Member aus dem User bekommen
-            const member = message.guild.member(user);
-
-            if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
-                message.channel.send("Du kannst keine Administratoren oder Moderatoren muten!");
-                return;
-            }
-
-            // Wenn es ein Guild member ist, weiter machen
-            if (member) {
-
-                // Role hinzufügen
-                member.addRole(config.muterole);
-
-                // Bestätigung senden
-                message.channel.send(member + " wurde gemuted");
-
-                // Embed generieren
-                let muteEmbed = new Discord.RichEmbed()
-                    .setTitle("Ein User wurde gemuted")
-                    .setColor(0x30add3)
-                    .addField("Moderator", message.author + "/" + message.author.id)
-                    .addField("Muted", member.user.username + "/" + member.id)
-                    .setFooter("Discord Log Bot " + config.version)
-                    .setTimestamp();
-
-                // Embed in den LOG schicken
-                logChannel.send({ embed: muteEmbed });
-            }
-        }
+        require('./commands/' + "mute").do({
+            message: message,
+            config: config,
+            logChannel: logChannel,
+            db: db
+        })
     }
 
     // UNMUTE Command
@@ -357,7 +300,7 @@ client.on('message', (message) => {
         let jw = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
             message.channel.send(member + " hat " + (result[0].warns || 0) + " verwarnungen!");
-        })
+        });
     }
 
     if (message.content === config.prefix + "random") {

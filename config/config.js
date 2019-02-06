@@ -7,7 +7,6 @@ let config = {
     "adminrole": "536610937252085772",
     "modrole": "536612048377741332",
     "muterole": "538081337798688788",
-    "drss": "268478587651358721",
     "gitdates": "537008838608551936",
     "host": "localhost",
     "user": "mod",

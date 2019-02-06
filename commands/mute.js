@@ -47,7 +47,7 @@ module.exports = {
         db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw (err);
             if (!result[0]) {
-                mutes = 1;
+                let mutes = 1;
                 db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(mutes) + ")", function(error) {
                     if (error) throw (error);
                     member.addRole(config.muterole);
@@ -67,7 +67,7 @@ module.exports = {
                     params.logChannel.send({ embed: fmuteEmbed });
                 });
             } else {
-                mutes = result[0].mutes + 1;
+                let mutes = result[0].mutes + 1;
                 db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), function(error) {
                     if (error) throw (error);
                     params.message.channel.send(member.user + " wurde gemuted. Jetzige Mutes: " + mutes);

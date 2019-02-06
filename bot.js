@@ -1,7 +1,6 @@
 // Discord Client erstellen
-const Discord = require('discord.js');
+const Discord = require("discord.js");
 const client = new Discord.Client();
-const async = require("async");
 
 //Erster LOG Channel schritt
 let logChannel;
@@ -12,7 +11,7 @@ const config = require("./config/config");
 // DB
 const db = require("./config/db");
 
-client.on('ready', () => {
+client.on("ready", () => {
 
     // LOG Channel holen (2. LOG Channel Schritt)
     logChannel = client.channels.get(config.logChannel);
@@ -93,7 +92,7 @@ client.on('message', (message) => {
         require('./commands/' + "help").do({
             message: message,
             prefix: config.prefix,
-        })
+        });
     }
 
     // Warten auf ne !mute Nachricht
@@ -103,8 +102,9 @@ client.on('message', (message) => {
             message: message,
             config: config,
             logChannel: logChannel,
-            db: db
-        })
+            db: db,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+        });
     }
 
     // UNMUTE Command

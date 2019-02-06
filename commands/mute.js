@@ -1,8 +1,11 @@
+const config = require("../config/config");
+
 module.exports = {
     do: function(params) {
-        const member = params.message.mentions[0];
+        const member = params.message.mentions.users.first();
+        let reason = params.args.slice(0).join(" ");
 
-        if (!params.message.member.roles.has(params.config.modrole)) {
+        if (!params.message.member.roles.has(config.modrole)) {
 
             // Reply für keine Berechtigungen
             params.message.reply(" du hast leider keine Berechtigung für diesen Command");
@@ -15,7 +18,7 @@ module.exports = {
                 .setColor()
                 .addField("Channel", linkChannel)
                 .addField("User", params.message.author + "/" + params.message.author.id)
-                .setFooter("Discord Log Bot " + params.config.version)
+                .setFooter("Discord Log Bot " + config.version)
                 .setTimestamp();
 
             // Ins LOG senden
@@ -24,12 +27,12 @@ module.exports = {
             return;
         }
 
-        if (!params.message.member.roles.has(params.config.modrole)) {
+        if (!params.message.member.roles.has(config.modrole)) {
             params.message.channel.send("Du hast leider keine Berechtigungen!");
             return;
         }
 
-        if (member.roles.find(s => s.id === params.config.adminrole) || member.roles.find(s => s.id === params.config.modrole)) {
+        if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
             params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
             return;
         }
@@ -38,9 +41,6 @@ module.exports = {
             params.message.channel.send("Bitte gebe ein User an! Format: `!mute <@user> <Grund>`");
             return;
         }
-
-        const args = params.message.content.slice(params.config.prefix.length).trim().split(/ +/g);
-        let reason = args.slice(0).join(" ");
 
         if (!reason) {
             params.message.channel.send("Bitte gebe einen Grund an! Format: `!mute <@user> <Grund>`");
@@ -53,7 +53,7 @@ module.exports = {
                 mutes = 1;
                 db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (" + db.ecape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(mutes) + ")", function(error) {
                     if (error) throw (error);
-                    member.addRole(params.config.muterole);
+                    member.addRole(config.muterole);
                     params.message.channel.send(member + " wurde gemuted");
 
                     let muteEmbed = new Discord.RichEmbed()
@@ -61,7 +61,7 @@ module.exports = {
                         .setColor(0x30add3)
                         .addField("Moderator", params.message.author + "/" + params.message.author.id)
                         .addField("Muted", member.user.username + "/" + member.id)
-                        .setFooter("Discord Log Bot " + params.config.version)
+                        .setFooter("Discord Log Bot " + config.version)
                         .setTimestamp();
 
                     // Embed in den LOG schicken

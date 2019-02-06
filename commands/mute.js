@@ -70,7 +70,7 @@ module.exports = {
                 let mutes = result[0].mutes + 1;
                 db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), function(error) {
                     if (error) throw (error);
-                    params.message.channel.send(member.user + " wurde gemuted. Jetzige Mutes: " + mutes);
+                    params.message.channel.send(member.user + " wurde gemuted. Momentane Mutes: " + mutes);
 
                     let muteEmbed = new Discord.RichEmbed()
                         .setTitle("Ein User wurde gemuted!")

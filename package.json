@@ -5,7 +5,6 @@
     "main": "bot.js",
     "private": true,
     "dependencies": {
-        "async": "latest",
         "discord.js": "latest",
         "mysql": "latest"
     },

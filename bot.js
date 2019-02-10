@@ -8,9 +8,6 @@ let logChannel;
 // Config holen
 const config = require("./config/config");
 
-// DB
-const db = require("./config/db");
-
 client.on("ready", () => {
 
     // LOG Channel holen (2. LOG Channel Schritt)

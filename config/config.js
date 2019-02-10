@@ -5,12 +5,11 @@ let config = {
     "version": "v1.1.0",
     "prefix": "!",
     "logChannel": "536989961514254357",
-    "adminrole": "536610937252085772",
-    "modrole": "536612048377741332",
+    "staffrole": "541996524058705920",
     "muterole": "538081337798688788",
     "gitdates": "537008838608551936",
     "host": "localhost",
-    "user": "mod",
+    "dbuser": "mod",
     "password": "wA38K5a!",
     "database": "mod"
 };

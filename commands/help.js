@@ -1,16 +1,18 @@
-const discord = require("discord.js");
+const config = require("../config/config");
+const Discord = require("discord.js");
 
 module.exports = {
     do: function(params) {
-        let helpEmbed = new discord.RichEmbed()
+        let helpEmbed = new Discord.RichEmbed()
             .setTitle("Hilfe!!")
             .setColor(0x005542)
-            .addField("Übersicht aller Commands:", "```" + params.prefix + "(un-)mute, " + params.prefix + "kick, " + params.prefix + "ban (noch in arbeit), " + params.prefix + "warn```")
+            .addField("Übersicht aller Commands:", "```" + config.prefix + "(un-)mute, " + config.prefix + "kick, " + config.prefix + "ban (noch in arbeit), " + config.prefix + "warn```")
             .addBlankField()
-            .addField(params.prefix + "mute", "`" + params.prefix + "(un-)mute/ @<user>`")
-            .addField(params.prefix + "kick", "`" + params.prefix + "kick @<user> <Grund>`")
-            .addField(params.prefix + "ban", "`" + params.prefix + "ban @<user> <Grund>`")
-            .addField(params.prefix + "warn", "`" + params.prefix + "warn @<user> <Grund>`")
+            .addField(config.prefix + "mute", "`" + config.prefix + "(un-)mute/ @<user>`")
+            .addField(config.prefix + "kick", "`" + config.prefix + "kick @<user> <Grund>`")
+            .addField(config.prefix + "ban", "`" + config.prefix + "ban @<user> <Grund>`")
+            .addField(config.prefix + "warn", "`" + config.prefix + "warn @<user> <Grund>`")
+            .setFooter(config.appName + " " + config.version)
             .setTimestamp();
 
         params.message.channel.send({ embed: helpEmbed });

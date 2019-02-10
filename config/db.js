@@ -3,7 +3,7 @@ const config = require("./config");
 
 let db = mysql.createConnection({
     host: config.host,
-    user: config.user,
+    user: config.dbuser,
     password: config.password,
     database: config.database
 });

@@ -38,7 +38,7 @@ client.on('messageDelete', (message) => {
 
         let linkChannel = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id;
         // Embed generieren
-        let messageDeleteE = new Discord.RichEmbed()
+        let messageDelete = new Discord.RichEmbed()
             .setTitle("Nachricht gelöscht!")
             .setColor(0x00AE86)
             .setDescription("Nachricht\n ```" + message.content + "```\n User\n" + message.author + "\n\n [Zum Channel]" + "(" + linkChannel + ")")
@@ -46,7 +46,7 @@ client.on('messageDelete', (message) => {
             .setTimestamp();
 
         // Nachricht senden
-        logChannel.send({ embed: messageDeleteE });
+        logChannel.send({ embed: messageDelete });
     }
 });
 
@@ -68,7 +68,7 @@ client.on("messageUpdate", (message) => {
 
         let linkMessage = "https://canary.discordapp.com/channels/" + message.guild.id + "/" + message.channel.id + "/" + message.id;
         // Embed generieren
-        let messageUpdateE = new Discord.RichEmbed()
+        let messageUpdate = new Discord.RichEmbed()
             .setTitle("Nachricht editiert!")
             .setColor(0x30add3)
             .setDescription("Ursprüngliche Nachricht:\n ```" + message.edits[0] + "```\n" + "[Zum Beitrag]" + "(" + linkMessage + ")")
@@ -76,7 +76,7 @@ client.on("messageUpdate", (message) => {
             .setTimestamp();
 
         // Nachrichten senden, zuerst oben, dann unten
-        logChannel.send({ embed: messageUpdateE });
+        logChannel.send({ embed: messageUpdate });
     }
 });
 
@@ -100,9 +100,7 @@ client.on('message', (message) => {
 
         require('./commands/' + "mute").do({
             message: message,
-            config: config,
             logChannel: logChannel,
-            db: db,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
         });
     }
@@ -113,7 +111,6 @@ client.on('message', (message) => {
         require("./commands/" + "unmute").do({
             message: message,
             logChannel: logChannel,
-            db: db,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
         });
     }

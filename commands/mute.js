@@ -85,6 +85,6 @@ module.exports = {
                     params.logChannel.send({ embed: muteEmbed });
                 })
             }
-        })
+        });
     }
 }

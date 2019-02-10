@@ -116,7 +116,7 @@ client.on('message', (message) => {
             logChannel: logChannel,
             db: db,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
-        })
+        });
 
         if (message.content.startsWith(config.prefix + "kick")) {
 
@@ -191,7 +191,7 @@ client.on('message', (message) => {
             db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
                 if (err) throw (err);
                 if (!result[0]) {
-                    warns = 1;
+                    let warns = 1;
                     db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(warns) + ")", function(error) {
                         if (error) throw (error);
                         message.channel.send(member.user + " wurde zum ersten mal verwarnt");
@@ -209,7 +209,7 @@ client.on('message', (message) => {
                         logChannel.send({ embed: firstWarnEmbed });
                     });
                 } else {
-                    warns = result[0].warns + 1;
+                    let warns = result[0].warns + 1;
                     db.query("UPDATE `warnungen` SET `warns` =  " + db.escape(warns) + " WHERE `id` = " + db.escape(member.id), function(error) {
                         if (error) throw (error);
                         message.channel.send(member.user + " wurde verwarnt. Jetzige Warns: " + warns);
@@ -260,5 +260,6 @@ client.on('message', (message) => {
             }
         }
     }
-})
+});
+
 client.login(config.clientToken);

@@ -47,8 +47,8 @@ module.exports = {
         // Bestätigung senden
         params.message.channel.send(member + " wurde entmuted");
 
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id))
-            // Embed generieren
+        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id));
+        // Embed generieren
         let unmuteEmbed = new Discord.RichEmbed()
             .setTitle("Ein User wurde entmuted")
             .setColor(0xe73e51)

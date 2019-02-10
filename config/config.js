@@ -10,7 +10,7 @@ let config = {
     "gitdates": "537008838608551936",
     "host": "localhost",
     "dbuser": "mod",
-    "password": "wA38K5a!",
+    "password": "wA38K5a!", //lgtm [js/hardcoded-credentials]
     "database": "mod"
 };
 console.log(config);

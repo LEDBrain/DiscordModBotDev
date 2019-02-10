@@ -112,154 +112,47 @@ client.on('message', (message) => {
 
         require("./commands/" + "unmute").do({
             message: message,
-            config: config,
             logChannel: logChannel,
             db: db,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
         });
+    }
 
-        if (message.content.startsWith(config.prefix + "kick")) {
+    if (message.content.startsWith(config.prefix + "kick")) {
 
-            if (!message.member.roles.has(config.modrole)) {
-                message.channel.send("Du hast leider keine Berechtigungen!");
-                return;
-            }
+        require("./commands/" + "kick").do({
+            message: message,
+            logChannel: logChannel,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+        });
+    }
 
-            const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    if (message.content.startsWith(config.prefix + "warn")) {
 
-            let member = message.mentions.members.first();
+        require("./commands/" + "warn").do({
+            message: message,
+            logChannel: logChannel,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+        });
+    }
 
-            if (!member) {
-                message.channel.send("Bitte gebe ein User an! Format: `!kick <@user> <Grund>`");
-                return;
-            }
+    if (message.content.startsWith(config.prefix + "seewarns")) {
+        require("./commands" + "seewarns").do({
+            message: message,
+            logChannel: logChanel
+        });
+    }
 
-            if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
-                message.channel.send("Du kannst keine Administratoren oder Moderatoren kicken!");
-                return;
-            }
+    if (message.content === config.prefix + "random") {
+        var random = Math.random();
 
-            let reason = args.slice(2).join(" ");
-
-            if (!reason) {
-                message.channel.send("Bitte gebe einen Grund an! Format: `!kick <@user> <Grund>`");
-                return;
-            }
-
-            let kickEmbed = new Discord.RichEmbed()
-                .setTitle("Ein Mitglied wurde gekickt")
-                .setColor(0xf4eb42)
-                .addField("Member", member.user + "/" + member.id, true)
-                .addField("Moderator", message.author, true)
-                .addBlankField()
-                .addField("Grund", "```" + reason + "```", true)
-                .setFooter("Discord Log Bot " + config.version)
-                .setTimestamp();
-
-            member.kick(reason)
-                .then(() => logChannel.send({ embed: kickEmbed }));
-        }
-
-        if (message.content.startsWith(config.prefix + "warn")) {
-
-            if (!message.member.roles.has(config.modrole)) {
-                message.channel.send("Du hast leider keine Berechtigungen!");
-                return;
-            }
-
-            const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
-
-            let member = message.mentions.members.first();
-
-            if (!member) {
-                message.channel.send("Bitte gebe ein User an! Format: `!warn <@user> <Grund>`");
-                return;
-            }
-
-            if (member.roles.has(config.adminrole) || member.roles.has(config.modrole)) {
-                message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
-                return;
-            }
-
-            let reason = args.slice(2).join(" ");
-
-            if (!reason) {
-                message.channel.send("Bitte gebe einen Grund an! Format: `!warn <@user> <Grund>`");
-                return;
-            }
-
-            db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
-                if (err) throw (err);
-                if (!result[0]) {
-                    let warns = 1;
-                    db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(warns) + ")", function(error) {
-                        if (error) throw (error);
-                        message.channel.send(member.user + " wurde zum ersten mal verwarnt");
-
-                        let firstWarnEmbed = new Discord.RichEmbed()
-                            .setTitle("Ein User wurde das erste Mal verwarnt!")
-                            .setColor(0xf4eb42)
-                            .addField("User", member.user + "/" + member.id)
-                            .addField("Moderator", message.author + "/" + message.author.id)
-                            .addField("Warns", warns)
-                            .addField("Grund", "```" + reason + "```")
-                            .setFooter("Discord Log Bot " + config.version)
-                            .setTimestamp();
-
-                        logChannel.send({ embed: firstWarnEmbed });
-                    });
-                } else {
-                    let warns = result[0].warns + 1;
-                    db.query("UPDATE `warnungen` SET `warns` =  " + db.escape(warns) + " WHERE `id` = " + db.escape(member.id), function(error) {
-                        if (error) throw (error);
-                        message.channel.send(member.user + " wurde verwarnt. Jetzige Warns: " + warns);
-
-                        let warnEmbed = new Discord.RichEmbed()
-                            .setTitle("Ein User wurde verwarnt!")
-                            .setColor(0xf4eb42)
-                            .addField("User", member.user + "/" + member.id)
-                            .addField("Moderator", message.author + "/" + message.author.id)
-                            .addField("Warns", warns)
-                            .addField("Grund", "```" + reason + "```")
-                            .setFooter("Discord Log Bot " + config.version)
-                            .setTimestamp();
-
-                        logChannel.send({ embed: warnEmbed });
-                    });
-                }
-            });
-        }
-
-        if (message.content.startsWith(config.prefix + "seewarns")) {
-
-            if (!message.member.roles.has(config.modrole)) {
-                message.channel.send("Du hast leider keine Berechtigungen!");
-                return;
-            }
-
-            let member = message.mentions.members.first();
-
-            if (!member) {
-                message.channel.send("Bitte gebe ein User an! Format: `!seewarn <@user>`");
-                return;
-            }
-
-            db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
-                if (err) throw err;
-                message.channel.send(member + " hat " + (result[0].warns || 0) + " verwarnungen!");
-            });
-        }
-
-        if (message.content === config.prefix + "random") {
-            var random = Math.random();
-
-            if (random < "0.5") {
-                message.channel.send("Kopf!");
-            } else if (random > "0.5") {
-                message.channel.send("Zahl!");
-            }
+        if (random < "0.4") {
+            message.channel.send("Kopf!");
+        } else if (random > "0.4") {
+            message.channel.send("Zahl!");
         }
     }
+
 });
 
 client.login(config.clientToken);

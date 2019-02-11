@@ -9,7 +9,7 @@ let config = {
     "muterole": "538081337798688788",
     "gitdates": "537008838608551936",
     "host": "localhost",
-    "dbuser": "mod",
+    "dbuser": "mod", //lgtm [js/hardcoded-credentials]
     "password": "wA38K5a!", //lgtm [js/hardcoded-credentials]
     "database": "mod"
 };

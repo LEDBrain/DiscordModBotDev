@@ -63,5 +63,6 @@ module.exports = {
         params.logChannel.send({ embed: unmuteEmbed });
 
         db.end()
+            .then(() => console.log("Disconnected"));
     }
 };

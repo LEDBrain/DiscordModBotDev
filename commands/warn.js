@@ -79,8 +79,8 @@ module.exports = {
                     params.logChannel.send({ embed: warnEmbed });
                 });
             }
-            db.end()
-            console.log("Disconnected")
+            db.end();
+            console.log("Disconnected");
         });
     }
 };

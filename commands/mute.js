@@ -88,6 +88,6 @@ module.exports = {
         });
 
         db.end()
-            .then(console.log("Disconnected"));
+        console.log("Disconnected")
     }
 };

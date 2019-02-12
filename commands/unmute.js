@@ -61,5 +61,7 @@ module.exports = {
 
         // Embed in den LOG schicken
         params.logChannel.send({ embed: unmuteEmbed });
+
+        db.end()
     }
 };

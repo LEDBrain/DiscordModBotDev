@@ -31,5 +31,6 @@ module.exports = {
             if (err) throw err;
             params.message.channel.send(member + " hat " + (result[0].warns || 0) + " verwarnungen!");
         });
+        db.end()
     }
 };

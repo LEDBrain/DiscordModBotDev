@@ -47,22 +47,23 @@ module.exports = {
         // Bestätigung senden
         params.message.channel.send(member + " wurde entmuted");
 
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id));
+        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err) {
+            if (err) throw err;
+            db.end();
+            console.log("Disconnected");
+        });
         // Embed generieren
         let unmuteEmbed = new Discord.RichEmbed()
             .setTitle("Ein User wurde entmuted")
             .setColor(0xe73e51)
             .addField("User", member.user.username + "/" + member.id)
             .addField("Moderator", params.message.author + "/" + params.message.author.id)
-            .addField("Mutes", mutes)
+            .addField("Mutes gesamt", mutes)
             .addField("Grund", "```" + reason + "```")
             .setFooter(config.appName + " " + config.version)
             .setTimestamp();
 
         // Embed in den LOG schicken
         params.logChannel.send({ embed: unmuteEmbed });
-
-        db.end()
-            .then(() => console.log("Disconnected"));
     }
 };

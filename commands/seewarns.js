@@ -30,9 +30,9 @@ module.exports = {
         db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
             params.message.channel.send(member + " hat " + (result[0].warns || 0) + " verwarnungen!");
-        });
 
-        db.end()
-            .then(() => console.log("Disconnected"));
+            db.end();
+            console.log("Disconnected");
+        });
     }
 };

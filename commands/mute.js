@@ -54,11 +54,11 @@ module.exports = {
                     params.message.channel.send(member + " wurde gemuted");
 
                     let fmuteEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde gemuted")
+                        .setTitle("Ein User wurde das erste mal gemuted")
                         .setColor(0xe73e51)
                         .addField("User", member.user + "/" + member.id)
                         .addField("Moderator", params.message.author + "/" + params.message.author.id)
-                        .addField("Mutes", mutes)
+                        .addField("Mutes gesamt", mutes)
                         .addField("Grund", "```" + reason + "```")
                         .setFooter(config.appName + " " + config.version)
                         .setTimestamp();
@@ -70,14 +70,14 @@ module.exports = {
                 let mutes = result[0].mutes + 1;
                 db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), function(error) {
                     if (error) throw (error);
-                    params.message.channel.send(member.user + " wurde gemuted. Momentane Mutes: " + mutes);
+                    params.message.channel.send(member.user + " wurde gemuted. Gesamte Mutes: " + mutes);
 
                     let muteEmbed = new Discord.RichEmbed()
                         .setTitle("Ein User wurde gemuted!")
                         .setColor(0xe73e51)
                         .addField("User", member.user + "/" + member.id)
                         .addField("Moderator", params.message.author + "/" + params.message.author.id)
-                        .addField("Mutes", mutes)
+                        .addField("Mutes gesamt", mutes)
                         .addField("Grund", "```" + reason + "```")
                         .setFooter(config.appName + " " + config.version)
                         .setTimestamp();
@@ -85,9 +85,8 @@ module.exports = {
                     params.logChannel.send({ embed: muteEmbed });
                 });
             }
+            db.end();
+            console.log("Disconnected");
         });
-
-        db.end()
-        console.log("Disconnected")
     }
 };

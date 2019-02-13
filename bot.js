@@ -1,6 +1,7 @@
 // Discord Client erstellen
 const Discord = require("discord.js");
 const client = new Discord.Client();
+const async = require("async");
 
 //Erster LOG Channel schritt
 let logChannel;
@@ -44,12 +45,20 @@ client.on("messageUpdate", (message) => {
     });
 });
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
 
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;
 
     if (message.author.bot) return;
+
+    if (message.content.startsWith(config.prefix + "ban")) {
+
+        require("./commands/ban").do({
+            message: message,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+        });
+    }
 
     if (message.content === config.prefix + "help") {
 

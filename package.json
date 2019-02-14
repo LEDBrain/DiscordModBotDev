@@ -6,6 +6,7 @@
     "private": true,
     "dependencies": {
         "discord.js": "latest",
+        "async": "latest",
         "mysql": "latest"
     },
     "author": "KokosnussDEV"

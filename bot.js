@@ -88,6 +88,7 @@ client.on("message", async (message) => {
         });
     }
 
+    // Kick Command
     if (message.content.startsWith(config.prefix + "kick")) {
 
         require("./commands/kick").do({
@@ -97,6 +98,7 @@ client.on("message", async (message) => {
         });
     }
 
+    // Warn Command
     if (message.content.startsWith(config.prefix + "warn")) {
 
         require("./commands/warn").do({
@@ -106,9 +108,10 @@ client.on("message", async (message) => {
         });
     }
 
-    if (message.content.startsWith(config.prefix + "seewarns")) {
+    // Command to see Infos about user
+    if (message.content.startsWith(config.prefix + "user")) {
 
-        require("./commands/seewarns").do({
+        require("./commands/user").do({
             message: message,
             logChannel: logChanel
         });

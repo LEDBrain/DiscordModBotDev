@@ -8,29 +8,29 @@ const db = require("../config/db");
 module.exports = {
     do: async function(params) {
 
-    	// Member aus der Nachricht klauen
+        // Member aus der Nachricht klauen
         let member = message.mentions.members.first();
 
-		// Kein Teammember? Oh sorry
+        // Kein Teammember? Oh sorry
         if (!params.message.member.roles.has(config.staffrole)) {
             require("./commandModules/nopermEmbed").do({
-            	message: params.message,
-            	logChannel: params.logChannel
-            }),
+                message: params.message,
+                logChannel: params.logChannel
+            });
         }
 
-		// Falls kein Member angegeben wurde
+        // Falls kein Member angegeben wurde
         if (!member) {
             params.message.channel.send("Bitte gebe ein User an! Format: `" + config.prefix + "user <@user>`");
             return;
         }
 
-		// Warns des Users aus der DB holen
+        // Warns des Users aus der DB holen
         let warns = await db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
         });
 
-		// Mutes des Users aus der DB holen
+        // Mutes des Users aus der DB holen
         let mutes = await db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
             // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
@@ -38,7 +38,7 @@ module.exports = {
             console.log("Disconnected");
         });
 
-		// Nachricht fürs Log vorbereiten
+        // Nachricht fürs Log vorbereiten
         let userEmbed = new Discord.RichEmbed()
             .setTitle("Userinfo für " + member.user.username)
             .setColor(0x1fab89)
@@ -47,7 +47,7 @@ module.exports = {
             .setFooter(config.appName + " " + config.version)
             .setTimestamp()
 
-		// Senden
+        // Senden
         await params.message.channel.send({ embed: userEmbed })
     }
 };

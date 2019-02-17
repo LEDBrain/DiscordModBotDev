@@ -44,30 +44,30 @@ client.on("messageUpdate", (message) => {
 });
 
 // Commands
-client.on("message", async (message) => {
+client.on("message", async(message) => {
 
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;
 
-	// Prävention: Bot kann nicht auf seine eigenen Nachrichten antworten
+    // Prävention: Bot kann nicht auf seine eigenen Nachrichten antworten
     if (message.author.bot) return;
 
     // shutdown Command
     if (message.content === config.prefix + "shutdown") {
-    	require("./commands/shutdown").do({
-    		message: message,
-    		logChannel: logChannel
-    	});
+        require("./commands/shutdown").do({
+            message: message,
+            logChannel: logChannel
+        });
     }
 
     // in der Public Version nicht enthalten
     if (message.content === config.prefix + "startlss") {
-    	require("./commands/start").do({
-    		message: message
-    	});
+        require("./commands/start").do({
+            message: message
+        });
     }
 
-	// BAN Command
+    // BAN Command
     if (message.content.startsWith(config.prefix + "ban")) {
         require("./commands/ban").do({
             message: message,
@@ -75,7 +75,7 @@ client.on("message", async (message) => {
         });
     }
 
-	// HELP Command
+    // HELP Command
     if (message.content === config.prefix + "help") {
         require("./commands/help").do({
             message: message,
@@ -127,12 +127,12 @@ client.on("message", async (message) => {
         });
     }
 
-	// Easter Egg :)
+    // Easter Egg :)
     if (message.content === config.prefix + "random") {
 
         require("./commands/random").do({
-			message: message
-		});
+            message: message
+        });
     }
 
 });

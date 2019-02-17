@@ -26,12 +26,12 @@ module.exports = {
         }
 
         // Warns des Users aus der DB holen
-        let warns = await db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
+        let warns = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
         });
 
         // Mutes des Users aus der DB holen
-        let mutes = await db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
+        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
             // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
             db.end();

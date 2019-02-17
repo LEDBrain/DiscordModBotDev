@@ -56,7 +56,8 @@ module.exports = {
                 message.react("❌");
             });
 
-        const reactions = await params.message.awaitReactions(reaction => reaction.emoji.name === "✅" || reaction.emoji.name === "❌", { time: 600000 });
-        await params.message.channel.send(reactions)
+        const reactions = await params.message.awaitReactions(reaction => {
+        	reaction.emoji.name === "✅" || reaction.emoji.name === "❌"
+        }, { time: 600000 });
     }
 };

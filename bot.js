@@ -28,7 +28,6 @@ client.on("ready", () => {
 
 // LOG für eine gelöschte Nachricht
 client.on("messageDelete", (message) => {
-
     require("./commands/messageDelete").do({
         message: message,
         logChannel: logChannel
@@ -37,7 +36,6 @@ client.on("messageDelete", (message) => {
 
 // LOG für bearbeitete Nachricht
 client.on("messageUpdate", (message) => {
-
     require("./commands/messageUpdate").do({
         message: message,
         logChannel: logChannel,
@@ -45,32 +43,48 @@ client.on("messageUpdate", (message) => {
     });
 });
 
+// Commands
 client.on("message", async (message) => {
 
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;
 
+	// Prävention: Bot kann nicht auf seine eigenen Nachrichten antworten
     if (message.author.bot) return;
 
-    if (message.content.startsWith(config.prefix + "ban")) {
+    // shutdown Command
+    if (message.content === config.prefix + "shutdown") {
+    	require("./commands/shutdown").do({
+    		message: message,
+    		logChannel: logChannel
+    	});
+    }
 
+    // in der Public Version nicht enthalten
+    if (message.content === config.prefix + "startlss") {
+    	require("./commands/start").do({
+    		message: message
+    	});
+    }
+
+	// BAN Command
+    if (message.content.startsWith(config.prefix + "ban")) {
         require("./commands/ban").do({
             message: message,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
         });
     }
 
+	// HELP Command
     if (message.content === config.prefix + "help") {
-
         require("./commands/help").do({
             message: message,
             prefix: config.prefix
         });
     }
 
-    // Warten auf ne mute Nachricht
+    // MUTE Command
     if (message.content.startsWith(config.prefix + "mute")) {
-
         require("./commands/mute").do({
             message: message,
             logChannel: logChannel,
@@ -80,7 +94,6 @@ client.on("message", async (message) => {
 
     // UNMUTE Command
     if (message.content.startsWith(config.prefix + "unmute")) {
-
         require("./commands/unmute").do({
             message: message,
             logChannel: logChannel,
@@ -88,9 +101,8 @@ client.on("message", async (message) => {
         });
     }
 
-    // Kick Command
+    // KICK Command
     if (message.content.startsWith(config.prefix + "kick")) {
-
         require("./commands/kick").do({
             message: message,
             logChannel: logChannel,
@@ -98,9 +110,8 @@ client.on("message", async (message) => {
         });
     }
 
-    // Warn Command
+    // WARN Command
     if (message.content.startsWith(config.prefix + "warn")) {
-
         require("./commands/warn").do({
             message: message,
             logChannel: logChannel,
@@ -108,25 +119,23 @@ client.on("message", async (message) => {
         });
     }
 
-    // Command to see Infos about user
+    // USER Command (zeigt Infos z.B.: Mutes, Warns etc)
     if (message.content.startsWith(config.prefix + "user")) {
-
         require("./commands/user").do({
             message: message,
             logChannel: logChanel
         });
     }
 
+	// Easter Egg :)
     if (message.content === config.prefix + "random") {
-        var random = Math.random();
 
-        if (random < "0.4") {
-            message.channel.send("Kopf!");
-        } else if (random > "0.4") {
-            message.channel.send("Zahl!");
-        }
+        require("./commands/random").do({
+			message: message
+		});
     }
 
 });
 
+// Connecten zu Discord
 client.login(config.clientToken);

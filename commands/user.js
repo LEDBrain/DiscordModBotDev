@@ -1,43 +1,44 @@
+// Config holen
 const config = require("../config/config");
+// für RichEmbed's
 const Discord = require("discord.js");
+// Wir wollen ja auch was machen ne
 const db = require("../config/db");
 
 module.exports = {
-    do: function(params) {
+    do: async function(params) {
+
+    	// Member aus der Nachricht klauen
         let member = message.mentions.members.first();
 
-        if (!params.message.member.roles.has(config.modrole)) {
-            params.message.reply("du hast leider keine Berechtigung für diesen Command");
-
-            let linkChannel = "https://canary.discordapp.com/channels/" + params.message.guild.id + "/" + params.message.channel.id;
-
-            let nopermsEmbed = new Discord.RichEmbed()
-                .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
-                .setColor()
-                .addField("Channel", linkChannel)
-                .addField("User", params.message.author + "/" + params.message.author.id)
-                .setFooter(config.appName + " " + config.version)
-                .setTimestamp();
-
-            params.logChannel.send({ embed: nopermsEmbed });
-            return;
+		// Kein Teammember? Oh sorry
+        if (!params.message.member.roles.has(config.staffrole)) {
+            require("./commandModules/nopermEmbed").do({
+            	message: params.message,
+            	logChannel: params.logChannel
+            }),
         }
 
+		// Falls kein Member angegeben wurde
         if (!member) {
-            params.message.channel.send("Bitte gebe ein User an! Format: `!user <@user>`");
+            params.message.channel.send("Bitte gebe ein User an! Format: `" + config.prefix + "user <@user>`");
             return;
         }
 
+		// Warns des Users aus der DB holen
         let warns = await db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
         });
 
+		// Mutes des Users aus der DB holen
         let mutes = await db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
             if (err) throw err;
+            // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
             db.end();
             console.log("Disconnected");
         });
 
+		// Nachricht fürs Log vorbereiten
         let userEmbed = new Discord.RichEmbed()
             .setTitle("Userinfo für " + member.user.username)
             .setColor(0x1fab89)
@@ -46,6 +47,7 @@ module.exports = {
             .setFooter(config.appName + " " + config.version)
             .setTimestamp()
 
+		// Senden
         await params.message.channel.send({ embed: userEmbed })
     }
 };

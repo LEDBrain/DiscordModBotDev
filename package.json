@@ -1,7 +1,7 @@
 {
-    "name": "discordlogbot",
+    "name": "discordmodbot",
     "version": "1.1.1",
-    "description": "DiscordLogBot",
+    "description": "DiscordModBot",
     "main": "bot.js",
     "private": true,
     "dependencies": {

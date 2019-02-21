@@ -129,9 +129,18 @@ client.on("message", async(message) => {
 
     // Easter Egg :)
     if (message.content === config.prefix + "random") {
-
         require("./commands/random").do({
             message: message
+        });
+    }
+
+    if (message.content === config.prefix + "ping") {
+        require("./commands/ping").do({
+            message: message,
+            client: client,
+            bars_2: client.emojis.find(emoji => emoji.name === "2bars"),
+            bars_3: client.emojis.find(emoji => emoji.name === "3bars"),
+            bars_4: client.emojis.find(emoji => emoji.name === "4bars")
         });
     }
 

@@ -144,6 +144,10 @@ client.on("message", async(message) => {
         });
     }
 
+    if (message.content === config.prefix + "le") {
+        let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
+        await message.channel.send(emojiList);
+    }
 });
 
 // Connecten zu Discord

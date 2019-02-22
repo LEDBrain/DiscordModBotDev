@@ -148,6 +148,14 @@ client.on("message", async(message) => {
         let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
         await message.channel.send(emojiList);
     }
+
+    if (message.content.startsWith(config.prefix + "tempmute")) {
+        require("./commands/tempmute").do({
+            message: message,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g),
+            logChannel: logChannel
+        });
+    }
 });
 
 // Connecten zu Discord

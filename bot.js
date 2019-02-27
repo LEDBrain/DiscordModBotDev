@@ -60,13 +60,6 @@ client.on("message", async(message) => {
         });
     }
 
-    // in der Public Version nicht enthalten
-    if (message.content === config.prefix + "startlss") {
-        require("./commands/start").do({
-            message: message
-        });
-    }
-
     // BAN Command
     if (message.content.startsWith(config.prefix + "ban")) {
         require("./commands/ban").do({
@@ -134,16 +127,6 @@ client.on("message", async(message) => {
         });
     }
 
-    if (message.content === config.prefix + "ping") {
-        require("./commands/ping").do({
-            message: message,
-            client: client,
-            bars_2: client.emojis.find(emoji => emoji.name === "2bars"),
-            bars_3: client.emojis.find(emoji => emoji.name === "3bars"),
-            bars_4: client.emojis.find(emoji => emoji.name === "4bars")
-        });
-    }
-
     if (message.content === config.prefix + "le") {
         let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
         await message.channel.send(emojiList);
@@ -154,6 +137,14 @@ client.on("message", async(message) => {
             message: message,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g),
             logChannel: logChannel
+        });
+    }
+
+    if (message.content.startsWith(config.prefix + "ticket")) {
+        require("./commands/ticket").do({
+            message: message,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g),
+            lgChannel: logChannel
         });
     }
 });

@@ -141,19 +141,29 @@ client.on("message", async(message) => {
     }
 
     if (message.content.startsWith(config.prefix + "ticket")) {
-        let args = message.content.slice(config.prefix.length).trim().split(/ +/g)
-        let cmdPartTwo = args[1]
+        let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+        let cmdPartTwo = args[1];
 
-        if (cmdPartTwo === "-new") {
-            require("./commands/ticket-new").do({
+        if (cmdPartTwo === "new") {
+            require("./commands/ticket-system/ticket-new").do({
                 message: message,
                 args: args,
                 logChannel: logChannel
             });
-        } else if (cmdPartTwo === "-add") {
-            console.log("-add")
-        } else if (cmdPartTwo === "-close") {
-            console.log("-close")
+        } else if (cmdPartTwo === "add") {
+            require("./commands/ticket-system/ticket-add").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "close") {
+            require("./commands/ticket-system/ticket-close").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "topic") {
+
         }
     }
 });

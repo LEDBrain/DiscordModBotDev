@@ -1,6 +1,6 @@
-const config = require("../config/config");
+const config = require("../../config/config");
 const Discord = require("discord.js");
-const db = require("../config/db");
+const db = require("../../config/db");
 
 module.exports = {
     do: async function(params) {
@@ -11,7 +11,7 @@ module.exports = {
             "VIEW_CHANNEL": true
         };
 
-        if (!subject) return params.message.channel.send("Bitte gebe ein Thema an! Format ```!ticket -add <Thema/Grund>```");
+        if (!subject) return params.message.channel.send("Bitte gebe ein Thema an! Format `" + config.prefix + "ticket new <Thema/Grund>`");
 
         let ticketCat = guild.channels.find(c => c.name === "Tickets")
 

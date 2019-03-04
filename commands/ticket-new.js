@@ -11,10 +11,12 @@ module.exports = {
             "VIEW_CHANNEL": true
         };
 
+        if (!subject) return params.message.channel.send("Bitte gebe ein Thema an! Format ```!ticket -add <Thema/Grund>```");
+
         let ticketCat = guild.channels.find(c => c.name === "Tickets")
 
         if (!ticketCat) {
-            let createdChannel = await guild.createChannel("Tickets", "category", [{
+            let createdCategory = await guild.createChannel("Tickets", "category", [{
                 id: guild.id,
                 deny: ["VIEW_CHANNEL", "SEND_MESSAGES"]
             }]);
@@ -45,6 +47,17 @@ module.exports = {
                         .setTimestamp();
 
                     createdChannel.send({ embed: ticketEmbed });
+
+                    let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
+                    let ticketLog = new Discord.RichEmbed()
+                        .setTitle(params.message.author.toString() + "hat ein Ticket erstellt.")
+                        .setColor(0xcf3030)
+                        .addField("User", params.message.author.toString())
+                        .setDescription("[Channel](" + linkChannel + ")")
+                        .setFooter(config.appName + " " + config.version)
+                        .setTimestamp();
+
+                    params.logChannel.send("<@&" + config.staffrole + ">", { embed: ticketLog });
                 });
             } else {
                 let newTNum = result[0].tNumber + 1;
@@ -73,6 +86,17 @@ module.exports = {
 
                         createdChannel.send({ embed: ticketEmbed });
 
+                        let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
+                        let ticketLog = new Discord.RichEmbed()
+                            .setTitle(params.message.author.toString() + "hat ein Ticket erstellt.")
+                            .setColor(0xcf3030)
+                            .addField("User", params.message.author.toString())
+                            .setDescription("[Channel](" + linkChannel + ")")
+                            .setFooter(config.appName + " " + config.version)
+                            .setTimestamp();
+
+                        params.logChannel.send("<@&" + config.staffrole + ">", { embed: ticketLog });
+
                     } else if (newTNum > 9 && newTNum < 100) {
                         let ticketNum = "0" + newTNum;
 
@@ -94,6 +118,17 @@ module.exports = {
                             .setTimestamp();
 
                         createdChannel.send({ embed: ticketEmbed });
+
+                        let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
+                        let ticketLog = new Discord.RichEmbed()
+                            .setTitle(params.message.author.username + "hat ein Ticket erstellt.")
+                            .setColor(0xcf3030)
+                            .addField("User", params.message.author.toString())
+                            .setDescription("[Channel](" + linkChannel + ")")
+                            .setFooter(config.appName + " " + config.version)
+                            .setTimestamp();
+
+                        params.logChannel.send("<@&" + config.staffrole + ">", { embed: ticketLog });
                     } else if (newTNum > 99) {
 
                         let ticketNum = newTNum;
@@ -116,6 +151,17 @@ module.exports = {
                             .setTimestamp();
 
                         createdChannel.send({ embed: ticketEmbed });
+
+                        let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
+                        let ticketLog = new Discord.RichEmbed()
+                            .setTitle(params.message.author.username + " hat ein Ticket erstellt.")
+                            .setColor(0xcf3030)
+                            .addField("User", params.message.author.toString())
+                            .setDescription("[Channel](" + linkChannel + ")")
+                            .setFooter(config.appName + " " + config.version)
+                            .setTimestamp();
+
+                        params.logChannel.send("<@&" + config.staffrole + ">", { embed: ticketLog });
                     }
                 });
             }

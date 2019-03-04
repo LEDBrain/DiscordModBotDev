@@ -141,11 +141,20 @@ client.on("message", async(message) => {
     }
 
     if (message.content.startsWith(config.prefix + "ticket")) {
-        require("./commands/ticket").do({
-            message: message,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g),
-            lgChannel: logChannel
-        });
+        let args = message.content.slice(config.prefix.length).trim().split(/ +/g)
+        let cmdPartTwo = args[1]
+
+        if (cmdPartTwo === "-new") {
+            require("./commands/ticket-new").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "-add") {
+            console.log("-add")
+        } else if (cmdPartTwo === "-close") {
+            console.log("-close")
+        }
     }
 });
 

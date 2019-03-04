@@ -10,7 +10,6 @@ module.exports = {
         const member = params.message.mentions.members.first();
 
         if (!params.message.member.roles.has(config.staffrole)) {
-
             require("./commandModules/nopermEmbed").do({
                 message: params.message,
                 logChannel: params.logChannel
@@ -32,7 +31,7 @@ module.exports = {
                 let mutes = 1;
                 db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(mutes) + ")", async function(error) {
                     if (error) throw (error);
-                    await member.addRole(config.muterole);
+                    await member.addRole(config.muterole, reason);
                     await params.message.channel.send(`<@${member.id}> wurde für ${ms(ms(mutetime))} gemuted`);
 
                     let fmuteEmbed = new Discord.RichEmbed()
@@ -53,7 +52,7 @@ module.exports = {
                 let mutes = result[0].mutes + 1;
                 db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), async function(error) {
                     if (error) throw (error);
-                    await member.addRole(config.muterole);
+                    await member.addRole(config.muterole, reason);
                     await params.message.channel.send(`<@${member.id}> wurde für ${ms(ms(mutetime))} gemuted`);
 
                     let muteEmbed = new Discord.RichEmbed()
@@ -75,7 +74,7 @@ module.exports = {
         });
 
         setTimeout(async function() {
-            await member.removeRole(config.muterole);
+            await member.removeRole(config.muterole, reason);
             params.message.channel.send(`<@${member.id}> wurde entmuted!`);
 
             let tmEndeEmbed = new Discord.RichEmbed()

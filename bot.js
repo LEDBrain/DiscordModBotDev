@@ -1,7 +1,6 @@
 // Discord Client erstellen
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const async = require("async");
 
 //Erster LOG Channel schritt
 let logChannel;

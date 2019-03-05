@@ -163,7 +163,10 @@ client.on("message", async(message) => {
                 logChannel: logChannel
             });
         } else if (cmdPartTwo === "topic") {
-
+            require("./commands/ticket-system/ticket-topic").do({
+                message: message,
+                args: args
+            });
         }
     }
 });

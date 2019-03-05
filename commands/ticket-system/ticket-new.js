@@ -62,7 +62,7 @@ module.exports = {
                     let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
 
                     let ticketLog = new Discord.RichEmbed()
-                        .setTitle(params.message.author.toString() + "hat ein Ticket erstellt.")
+                        .setTitle(params.message.author.toString() + " hat ein Ticket erstellt.")
                         .setColor(0xcf3030)
                         .addField("User", params.message.author.toString())
                         .setDescription("[Channel](" + linkChannel + ")")
@@ -106,7 +106,7 @@ module.exports = {
                         let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
 
                         let ticketLog = new Discord.RichEmbed()
-                            .setTitle(params.message.author.toString() + "hat ein Ticket erstellt.")
+                            .setTitle(params.message.author.toString() + " hat ein Ticket erstellt.")
                             .setColor(0xcf3030)
                             .addField("User", params.message.author.toString())
                             .setDescription("[Channel](" + linkChannel + ")")
@@ -143,7 +143,7 @@ module.exports = {
                         let linkChannel = "https://canary.discordapp.com/channels/" + guild.id + "/" + createdChannel.id;
 
                         let ticketLog = new Discord.RichEmbed()
-                            .setTitle(params.message.author.username + "hat ein Ticket erstellt.")
+                            .setTitle(params.message.author.username + " hat ein Ticket erstellt.")
                             .setColor(0xcf3030)
                             .addField("User", params.message.author.toString())
                             .setDescription("[Channel](" + linkChannel + ")")

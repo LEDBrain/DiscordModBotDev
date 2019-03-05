@@ -4,6 +4,8 @@ const config = require("../../config/config");
 module.exports = {
     do: async function(params) {
 
+        if (params.message.channel.name === "ticket-test") return;
+
         if (!params.message.channel.name.startsWith("ticket-")) return params.message.channel.send("Bitte führe diesen Command in einem Ticket-Channel aus!");
 
         if (!params.message.member.roles.has(config.staffrole)) {

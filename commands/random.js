@@ -9,7 +9,7 @@ module.exports = {
 
         let { body } = await superagent.get("http://aws.random.cat/meow");
 
-        if (!{ body }) return params.message.channel.send("Ups...es ist etwas daneben getropft");
+        if (!{ body }) return params.message.channel.send("Ups...es ist etwas daneben getropft"); // lgtm [js/trivial-conditional]
 
         let catEmbed = new Discord.RichEmbed()
             .setTitle("Hier eine Katze...Meow!")
@@ -19,5 +19,6 @@ module.exports = {
             .setTimestamp();
 
         params.message.channel.send({ embed: catEmbed })
+        genmsg.delete()
     }
 }

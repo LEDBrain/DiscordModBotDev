@@ -164,7 +164,8 @@ client.on("message", async(message) => {
         } else if (cmdPartTwo === "topic") {
             require("./commands/ticket-system/ticket-topic").do({
                 message: message,
-                args: args
+                args: args,
+                logChannel: logChannel
             });
         }
     }

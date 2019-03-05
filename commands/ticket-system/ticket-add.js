@@ -3,7 +3,12 @@ const config = require("../../config/config");
 
 module.exports = {
     do: async function(params) {
-        let addMember = params.message.mentions.users.first() || params.message.guild.members.get(params.args[2])
+
+        if (params.message.channel.name === "ticket-test") return;
+
+        let addMember = params.message.mentions.users.first();
+
+        if (!addMember) return params.messsage.channel.send("Bitte gebe einen User an! Format: `" + config.prefix + "`ticket add <@User>");
 
         if (!params.message.channel.name.startsWith("ticket-")) return params.message.channel.send("Bitte führe diesen Command in einem Ticket-Channel aus!");
 

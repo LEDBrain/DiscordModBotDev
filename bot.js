@@ -1,7 +1,6 @@
 // Discord Client erstellen
 const Discord = require("discord.js");
 const client = new Discord.Client();
-const async = require("async");
 
 //Erster LOG Channel schritt
 let logChannel;
@@ -57,13 +56,6 @@ client.on("message", async(message) => {
         require("./commands/shutdown").do({
             message: message,
             logChannel: logChannel
-        });
-    }
-
-    // in der Public Version nicht enthalten
-    if (message.content === config.prefix + "startlss") {
-        require("./commands/start").do({
-            message: message
         });
     }
 
@@ -134,16 +126,6 @@ client.on("message", async(message) => {
         });
     }
 
-    if (message.content === config.prefix + "ping") {
-        require("./commands/ping").do({
-            message: message,
-            client: client,
-            bars_2: client.emojis.find(emoji => emoji.name === "2bars"),
-            bars_3: client.emojis.find(emoji => emoji.name === "3bars"),
-            bars_4: client.emojis.find(emoji => emoji.name === "4bars")
-        });
-    }
-
     if (message.content === config.prefix + "le") {
         let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
         await message.channel.send(emojiList);
@@ -155,6 +137,37 @@ client.on("message", async(message) => {
             args: message.content.slice(config.prefix.length).trim().split(/ +/g),
             logChannel: logChannel
         });
+    }
+
+    if (message.content.startsWith(config.prefix + "ticket")) {
+        let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+        let cmdPartTwo = args[1];
+
+        if (cmdPartTwo === "new") {
+            require("./commands/ticket-system/ticket-new").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "add") {
+            require("./commands/ticket-system/ticket-add").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "close") {
+            require("./commands/ticket-system/ticket-close").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        } else if (cmdPartTwo === "topic") {
+            require("./commands/ticket-system/ticket-topic").do({
+                message: message,
+                args: args,
+                logChannel: logChannel
+            });
+        }
     }
 });
 

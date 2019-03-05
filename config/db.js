@@ -13,6 +13,7 @@ db.connect(function(err) {
 
     db.query("CREATE TABLE IF NOT EXISTS `warnungen` (`id` VARCHAR(255) NOT NULL PRIMARY KEY, `username` VARCHAR(255) NOT NULL, `warns` TINYINT(255) NOT NULL DEFAULT 0)");
     db.query("CREATE TABLE IF NOT EXISTS `mute` (`id` VARCHAR(255) NOT NULL PRIMARY KEY, `username` VARCHAR(255) NOT NULL, `mutes` TINYINT(255) NOT NULL DEFAULT 0)");
+    db.query("CREATE TABLE IF NOT EXISTS `tickets` (`guildID` VARCHAR(255) NOT NULL PRIMARY KEY, `tNumber` TINYINT(255) NOT NULL DEFAULT 0)"); // Added new DB Table
 
     console.log("Connected to DB");
 });

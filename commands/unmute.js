@@ -23,7 +23,7 @@ module.exports = {
         if (!reason) return params.message.channel.send("Bitte gebe einen Grund an! Format: `!unmute <@user> <Grund>`");
 
         // Role entfernen
-        await member.removeRole(config.muterole);
+        await member.removeRole(config.muterole, "unmute");
 
         // Bestätigung senden
         await params.message.channel.send(member + " wurde entmuted");

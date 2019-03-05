@@ -8,7 +8,8 @@
         "async": "latest",
         "discord.js": "latest",
         "ms": "latest",
-        "mysql": "latest"
+        "mysql": "latest",
+        "superagent": "^4.1.0"
     },
     "author": "KokosnussDEV"
 }

@@ -50,7 +50,7 @@ module.exports = {
                 let mutes = 1;
                 db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(mutes) + ")", function(error) {
                     if (error) throw (error);
-                    member.addRole(config.muterole);
+                    member.addRole(config.muterole, reason);
                     params.message.channel.send(member + " wurde gemuted");
 
                     let fmuteEmbed = new Discord.RichEmbed()
@@ -70,6 +70,7 @@ module.exports = {
                 let mutes = result[0].mutes + 1;
                 db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), function(error) {
                     if (error) throw (error);
+                    member.addRole(config.muterole, reason); // Major Bug Fixed
                     params.message.channel.send(member.user + " wurde gemuted. Gesamte Mutes: " + mutes);
 
                     let muteEmbed = new Discord.RichEmbed()

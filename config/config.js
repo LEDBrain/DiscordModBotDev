@@ -2,7 +2,7 @@ let config = {
     "appName": "Discord Mod Bot",
     "clientToken": "NTM2OTc4NzQ5MDIzOTc3NDgy.DyekPw.2DBxazjZKFwJDFm9BdFjtTE5STA",
     "clientID": "536978749023977482",
-    "version": "v1.1.0",
+    "version": "v2.0.0",
     "prefix": "!",
     "logChannel": "536989961514254357",
     "staffrole": "541996524058705920",

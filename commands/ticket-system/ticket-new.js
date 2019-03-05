@@ -18,7 +18,7 @@ module.exports = {
         let ticketCat = guild.channels.find(c => c.name === "Tickets")
 
         if (!ticketCat) {
-            let createdCategory = await guild.createChannel("Tickets", "category", [{
+            await guild.createChannel("Tickets", "category", [{
                 id: guild.id,
                 deny: ["VIEW_CHANNEL", "SEND_MESSAGES"]
             }]);

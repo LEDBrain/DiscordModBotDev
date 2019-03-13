@@ -25,6 +25,13 @@ client.on("ready", () => {
     client.user.setActivity("auf Nachrichten", { type: "WATCHING" });
 });
 
+client.on("guildMemberAdd", (member) => {
+    require("./commands/guildMemberAdd").do({
+        member: member,
+        logChannel: logChannel
+    });
+});
+
 // LOG für eine gelöschte Nachricht
 client.on("messageDelete", (message) => {
     require("./commands/messageDelete").do({
@@ -55,7 +62,8 @@ client.on("message", async(message) => {
     if (message.content === config.prefix + "shutdown") {
         require("./commands/shutdown").do({
             message: message,
-            logChannel: logChannel
+            logChannel: logChannel,
+            client: client
         });
     }
 

@@ -7,7 +7,7 @@ module.exports = {
         try {
             await params.message.channel.send("Der Bot fährt herunter...");
 
-            process.exit();
+            params.client.destroy();
         } catch (e) {
             params.message.channel.send(`ERROR: ${e.message}`);
         }

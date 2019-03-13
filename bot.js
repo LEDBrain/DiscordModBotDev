@@ -32,6 +32,13 @@ client.on("guildMemberAdd", (member) => {
     });
 });
 
+client.on("guildMemberRemove", (member) => {
+    require("./commands/guildMemberLeave").do({
+        member: member,
+        logChannel: logChannel
+    });
+});
+
 // LOG für eine gelöschte Nachricht
 client.on("messageDelete", (message) => {
     require("./commands/messageDelete").do({

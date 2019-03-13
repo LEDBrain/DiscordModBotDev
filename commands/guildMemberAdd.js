@@ -8,7 +8,7 @@ module.exports = {
 
         let joinEmbed = new Discord.RichEmbed()
             .setTitle("Ein Jemand ist gejoint!")
-            .setColor(#a0e4f1)
+            .setColor(0xa0e4f1)
             .addField("Member", member.toString())
             .addField("Joined", member.joinedAt)
             .addField("Account created", member.user.createdAt)

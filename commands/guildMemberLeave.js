@@ -8,7 +8,7 @@ module.exports = {
 
         let joinEmbed = new Discord.RichEmbed()
             .setTitle("Ein Jemand ist geleaved...")
-            .setColor(#ea7362)
+            .setColor(0xea7362)
             .addField("Member", member.toString())
             .setFooter(config.appName + " " + config.version)
             .setTimestamp();

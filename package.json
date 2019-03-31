@@ -9,7 +9,8 @@
         "discord.js": "latest",
         "ms": "latest",
         "mysql": "latest",
-        "superagent": "^4.1.0"
+        "superagent": "^4.1.0",
+        "util": "^0.11.1"
     },
     "author": "KokosnussDEV"
 }

@@ -11,7 +11,8 @@ let config = {
     "host": "localhost",
     "dbuser": "mod", //lgtm [js/hardcoded-credentials]
     "password": "wA38K5a!", //lgtm [js/hardcoded-credentials]
-    "database": "mod"
+    "database": "mod",
+    "ownerID": "199964094357307392"
 };
 console.log(config);
 

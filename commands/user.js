@@ -21,17 +21,17 @@ module.exports = {
 
         // Falls kein Member angegeben wurde
         if (!member) {
-            params.message.channel.send("Bitte gebe ein User an! Format: `" + config.prefix + "user <@user>`");
+            params.message.channel.send(`Bitte gebe ein User an! Format: \`${config.prefix} user <@user>\``);
             return;
         }
 
         // Warns des Users aus der DB holen
-        let warns = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = " + db.escape(member.id), function(err, result) { // lgtm[js/unused-local-variable]
+        let warns = db.query(`SELECT \`warns\` FROM \`warnungen\` WHERE \`id\` = ?`, [member.id], function(err, result) { // lgtm[js/unused-local-variable]
             if (err) throw err;
         });
 
         // Mutes des Users aus der DB holen
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) { // lgtm[js/unused-local-variable]
+        let mutes = db.query(`SELECT \`mutes\` FROM \`mute\` WHERE \`id\` = ?`, [member.id], function(err, result) { // lgtm[js/unused-local-variable]
             if (err) throw err;
             // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
             db.end();
@@ -40,14 +40,14 @@ module.exports = {
 
         // Nachricht fürs Log vorbereiten
         let userEmbed = new Discord.RichEmbed()
-            .setTitle("Userinfo für " + member.user.username)
+            .setTitle(`Userinfo für ${member.user.username}`)
             .setColor(0x1fab89)
-            .addField("Mutes", "```" + result[0].mutes || 0 + "```")
-            .addField("Warns", "```" + result[0].warns || 0 + "```")
-            .setFooter(config.appName + " " + config.version)
+            .addField("Mutes", `\`\`\`${result[0].mutes||0}\`\`\``)
+            .addField("Warns", `\`\`\`${result[0].warns||0}\`\`\``)
+            .setFooter(`${config.appName} ${config.version}`)
             .setTimestamp()
 
         // Senden
-        await params.message.channel.send({ embed: userEmbed })
+        await params.message.channel.send({ embed: userEmbed });
     }
 };

@@ -8,6 +8,11 @@ let logChannel;
 // Config holen
 const config = require("./config/config");
 
+const events = {
+    MESSAGE_UPDATE: "messageUpdate",
+    MESSAGE_DELETE: "messageDelete"
+}
+
 client.on("ready", () => {
 
     // LOG Channel holen (2. LOG Channel Schritt)
@@ -22,7 +27,7 @@ client.on("ready", () => {
     });
 
     // Activity auf "Schaut auf Nachrichten" setzen
-    client.user.setActivity("auf Nachrichten", { type: "WATCHING" });
+    client.user.setActivity("auf Nachrichten.", { type: "WATCHING" });
 });
 
 client.on("guildMemberAdd", (member) => {
@@ -33,7 +38,7 @@ client.on("guildMemberAdd", (member) => {
 });
 
 client.on("guildMemberRemove", (member) => {
-    require("./commands/guildMemberLeave").do({
+    require("./commands/guildMemberRemove").do({
         member: member,
         logChannel: logChannel
     });
@@ -48,12 +53,29 @@ client.on("messageDelete", (message) => {
 });
 
 // LOG für bearbeitete Nachricht
-client.on("messageUpdate", (message) => {
+client.on("messageUpdate", (oldMessage, newMessage, message) => {
     require("./commands/messageUpdate").do({
-        message: message,
+        oldMessage: oldMessage,
+        newMessage: newMessage,
         logChannel: logChannel,
-        client: client
+        message: message
     });
+});
+
+client.on("raw", async event => {
+    if (!events.hasOwnProperty(event.t)) return;
+
+    const { d: data } = event;
+
+    const user = client.users.get(data.user_id);
+
+    const channel = client.channels.get(data.channel_id) || await user.createDM();
+
+    if (channel.messages.has(data.message_id)) return;
+
+    const message = await channel.fetchMessage(data.message_id);
+
+    client.emit(events[event.t], channel, user, message);
 });
 
 // Commands
@@ -66,7 +88,7 @@ client.on("message", async(message) => {
     if (message.author.bot) return;
 
     // shutdown Command
-    if (message.content === config.prefix + "shutdown") {
+    if (message.content === `${config.prefix}shutdown`) {
         require("./commands/shutdown").do({
             message: message,
             logChannel: logChannel,
@@ -74,8 +96,15 @@ client.on("message", async(message) => {
         });
     }
 
+    if (message.content.startsWith(`${config.prefix}eval`)) {
+        require("./commands/eval").do({
+            message: message,
+            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+        });
+    }
+
     // BAN Command
-    if (message.content.startsWith(config.prefix + "ban")) {
+    if (message.content.startsWith(`${config.prefix}ban`)) {
         require("./commands/ban").do({
             message: message,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g)
@@ -83,15 +112,14 @@ client.on("message", async(message) => {
     }
 
     // HELP Command
-    if (message.content === config.prefix + "help") {
+    if (message.content === `${config.prefix}help`) {
         require("./commands/help").do({
-            message: message,
-            prefix: config.prefix
+            message: message
         });
     }
 
     // MUTE Command
-    if (message.content.startsWith(config.prefix + "mute")) {
+    if (message.content.startsWith(`${config.prefix}mute`)) {
         require("./commands/mute").do({
             message: message,
             logChannel: logChannel,
@@ -100,7 +128,7 @@ client.on("message", async(message) => {
     }
 
     // UNMUTE Command
-    if (message.content.startsWith(config.prefix + "unmute")) {
+    if (message.content.startsWith(`${config.prefix}unmute`)) {
         require("./commands/unmute").do({
             message: message,
             logChannel: logChannel,
@@ -109,7 +137,7 @@ client.on("message", async(message) => {
     }
 
     // KICK Command
-    if (message.content.startsWith(config.prefix + "kick")) {
+    if (message.content.startsWith(`${config.prefix}kick`)) {
         require("./commands/kick").do({
             message: message,
             logChannel: logChannel,
@@ -118,7 +146,7 @@ client.on("message", async(message) => {
     }
 
     // WARN Command
-    if (message.content.startsWith(config.prefix + "warn")) {
+    if (message.content.startsWith(`${config.prefix}warn`)) {
         require("./commands/warn").do({
             message: message,
             logChannel: logChannel,
@@ -127,7 +155,7 @@ client.on("message", async(message) => {
     }
 
     // USER Command (zeigt Infos z.B.: Mutes, Warns etc)
-    if (message.content.startsWith(config.prefix + "user")) {
+    if (message.content.startsWith(`${config.prefix}user`)) {
         require("./commands/user").do({
             message: message,
             logChannel: logChanel
@@ -135,18 +163,18 @@ client.on("message", async(message) => {
     }
 
     // Easter Egg :)
-    if (message.content === config.prefix + "random") {
+    if (message.content === `${config.prefix}random`) {
         require("./commands/random").do({
             message: message
         });
     }
 
-    if (message.content === config.prefix + "le") {
+    if (message.content === `${config.prefix}le`) {
         let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
         await message.channel.send(emojiList);
     }
 
-    if (message.content.startsWith(config.prefix + "tempmute")) {
+    if (message.content.startsWith(`${config.prefix}tempmute`)) {
         require("./commands/tempmute").do({
             message: message,
             args: message.content.slice(config.prefix.length).trim().split(/ +/g),
@@ -154,7 +182,7 @@ client.on("message", async(message) => {
         });
     }
 
-    if (message.content.startsWith(config.prefix + "ticket")) {
+    if (message.content.startsWith(`${config.prefix}ticket`)) {
         let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
         let cmdPartTwo = args[1];
 

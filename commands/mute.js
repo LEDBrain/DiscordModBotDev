@@ -8,25 +8,10 @@ module.exports = {
         let reason = params.args.slice(2).join(" ");
 
         if (!params.message.member.roles.has(config.staffrole)) {
-
-            // Reply für keine Berechtigungen
-            params.message.reply(" du hast leider keine Berechtigung für diesen Command");
-
-            // LOG zum Stalken
-            let linkChannel = "https://canary.discordapp.com/channels/" + params.message.guild.id + "/" + params.message.channel.id;
-
-            let nopermsEmbed = new Discord.RichEmbed()
-                .setTitle("Ein User hat versucht einen anderen zu muten (noperm)")
-                .setColor()
-                .addField("Channel", linkChannel)
-                .addField("User", params.message.author + "/" + params.message.author.id)
-                .setFooter(config.appName + " " + config.version)
-                .setTimestamp();
-
-            // Ins LOG senden
-            params.logChannel.send({ embed: nopermsEmbed });
-
-            return;
+            require("./commandModules/nopermEmbed").do({
+                message: params.message,
+                logChannel: params.logChannel
+            });
         }
 
         if (member.roles.has(config.staffrole)) {
@@ -35,32 +20,32 @@ module.exports = {
         }
 
         if (!member) {
-            params.message.channel.send("Bitte gebe ein User an! Format: `!mute <@user> <Grund>`");
+            params.message.channel.send(`Bitte gebe ein User an! Format: \`${config.prefix}mute <@user> <Grund>\``);
             return;
         }
 
         if (!reason) {
-            params.message.channel.send("Bitte gebe einen Grund an! Format: `!mute <@user> <Grund>`");
+            params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${config.prefix}mute <@user> <Grund>\``);
             return;
         }
 
-        db.query("SELECT `mutes` FROM `mute` WHERE `id` = " + db.escape(member.id), function(err, result) {
+        db.query(`SELECT \`mutes\` FROM \`mute\` WHERE \`id\` = ?`, [member.id], function(err, result) {
             if (err) throw (err);
             if (!result[0]) {
                 let mutes = 1;
-                db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (" + db.escape(member.id) + ", " + db.escape(member.user.username) + ", " + db.escape(mutes) + ")", function(error) {
+                db.query(`INSERT INTO \`mute\` (\`id\`, \`username\`, \`mutes\`) VALUE (?, ?, ?)`, [member.id, member.user.username, mutes], function(error) {
                     if (error) throw (error);
                     member.addRole(config.muterole, reason);
-                    params.message.channel.send(member + " wurde gemuted");
+                    params.message.channel.send(`${member} wurde gemuted`);
 
                     let fmuteEmbed = new Discord.RichEmbed()
                         .setTitle("Ein User wurde das erste mal gemuted")
                         .setColor(0xe73e51)
-                        .addField("User", member.user + "/" + member.id)
-                        .addField("Moderator", params.message.author + "/" + params.message.author.id)
+                        .addField("User", `${member.user}/${member.id}`)
+                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
                         .addField("Mutes gesamt", mutes)
-                        .addField("Grund", "```" + reason + "```")
-                        .setFooter(config.appName + " " + config.version)
+                        .addField("Grund", `\`\`\`${reason}\`\`\``)
+                        .setFooter(`${config.appName} ${config.version}`)
                         .setTimestamp();
 
                     // Embed in den LOG schicken
@@ -68,19 +53,19 @@ module.exports = {
                 });
             } else {
                 let mutes = result[0].mutes + 1;
-                db.query("UPDATE `mute` SET `mutes` =  " + db.escape(mutes) + " WHERE `id` = " + db.escape(member.id), function(error) {
+                db.query(`UPDATE \`mute\` SET \`mutes\` = ? WHERE \`id\` = ?`, [mutes, member.id], function(error) {
                     if (error) throw (error);
-                    member.addRole(config.muterole, reason); // Major Bug Fixed
-                    params.message.channel.send(member.user + " wurde gemuted. Gesamte Mutes: " + mutes);
+                    member.addRole(config.muterole, reason);
+                    params.message.channel.send(`${member.user} wurde gemuted. Gesamte Mutes: ${mutes}`);
 
                     let muteEmbed = new Discord.RichEmbed()
                         .setTitle("Ein User wurde gemuted!")
                         .setColor(0xe73e51)
-                        .addField("User", member.user + "/" + member.id)
-                        .addField("Moderator", params.message.author + "/" + params.message.author.id)
+                        .addField("User", `${member.user}/${member.id}`)
+                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
                         .addField("Mutes gesamt", mutes)
-                        .addField("Grund", "```" + reason + "```")
-                        .setFooter(config.appName + " " + config.version)
+                        .addField("Grund", `\`\`\`${reason}\`\`\``)
+                        .setFooter(`${config.appName} ${config.version}`)
                         .setTimestamp();
 
                     params.logChannel.send({ embed: muteEmbed });

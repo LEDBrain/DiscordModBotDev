@@ -6,13 +6,13 @@ module.exports = {
 
         let member = params.member;
 
-        let joinEmbed = new Discord.RichEmbed()
+        let leaveEmbed = new Discord.RichEmbed()
             .setTitle("Ein Jemand ist geleaved...")
             .setColor(0xea7362)
             .addField("Member", member.toString())
-            .setFooter(config.appName + " " + config.version)
+            .setFooter(`${config.appName} ${config.version}`)
             .setTimestamp();
 
-        params.logChannel.send({ embed: joinEmbed })
+        params.logChannel.send({ embed: leaveEmbed })
     }
 }

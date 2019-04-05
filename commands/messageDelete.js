@@ -1,4 +1,3 @@
-const config = require("../config/config");
 const Discord = require("discord.js");
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
                 .setTitle("Nachricht gelöscht!")
                 .setColor(0x00AE86)
                 .setDescription(`Nachricht\n \`\`\` ${params.message.content} \`\`\`\n User\n ${params.message.author} \n\n [Zum Channel](${linkChannel})`)
-                .setFooter(`${config.appName} ${config.version}`)
+                .setFooter(`${params.appName} ${params.version}`)
                 .setTimestamp();
 
             // Nachricht senden

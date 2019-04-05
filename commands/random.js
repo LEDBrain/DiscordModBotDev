@@ -1,4 +1,3 @@
-const config = require("../config/config");
 const Discord = require("discord.js");
 const superagent = require("superagent");
 
@@ -15,7 +14,7 @@ module.exports = {
             .setTitle("Hier eine Katze...Meow!")
             .setColor(0x1f3c88)
             .setImage(body.file)
-            .setFooter(`${config.appName} ${config.version}`)
+            .setFooter(`${params.appName} ${params.version}`)
             .setTimestamp();
 
         params.message.channel.send({ embed: catEmbed })

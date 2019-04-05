@@ -2,11 +2,20 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 //Erster LOG Channel schritt
 let logChannel;
 
-// Config holen
-const config = require("./config/config");
+let appName = process.env.APP_NAME;
+let version = process.env.DEV_VERSION;
+let logChannelID = process.env.LOG_CHANNEL;
+let prefix = process.env.PREFIX;
+let ownerID = process.env.OWNER_ID;
+let staffrole = process.env.STAFF_ROLE;
+let muterole = process.env.MUTE_ROLE;
+
 
 const events = {
     MESSAGE_UPDATE: "messageUpdate",
@@ -16,14 +25,14 @@ const events = {
 client.on("ready", () => {
 
     // LOG Channel holen (2. LOG Channel Schritt)
-    logChannel = client.channels.get(config.logChannel);
+    logChannel = client.channels.get(logChannelID);
     // Client Username anzeigen
-    console.log("Verbunden als " + client.user.tag);
+    console.log(`Verbunden als ${client.user.tag}`);
 
     // Client Server ausgeben
     console.log("Verbunden zu: ");
     client.guilds.forEach((guild) => {
-        console.log(" - " + guild.name);
+        console.log(` - ${guild.name}`);
     });
 
     // Activity auf "Schaut auf Nachrichten" setzen
@@ -40,7 +49,9 @@ client.on("guildMemberAdd", (member) => {
 client.on("guildMemberRemove", (member) => {
     require("./commands/guildMemberRemove").do({
         member: member,
-        logChannel: logChannel
+        logChannel: logChannel,
+        appName: appName,
+        version: version
     });
 });
 
@@ -48,38 +59,41 @@ client.on("guildMemberRemove", (member) => {
 client.on("messageDelete", (message) => {
     require("./commands/messageDelete").do({
         message: message,
-        logChannel: logChannel
+        logChannel: logChannel,
+        appName: appName,
+        version: version
     });
 });
 
 // LOG für bearbeitete Nachricht
-client.on("messageUpdate", (oldMessage, newMessage, message) => {
+client.on("messageUpdate", (oldMessage, newMessage) => {
     require("./commands/messageUpdate").do({
         oldMessage: oldMessage,
         newMessage: newMessage,
         logChannel: logChannel,
-        message: message
+        version: version,
+        appName: appName
     });
 });
 
-client.on("raw", async event => {
-    if (!events.hasOwnProperty(event.t)) return;
+/* client.on("raw", async packet => {
+    if (!["MESSAGE_UPDATE", "MESSAGE_DELETE"].includes(packet.t)) return;
 
-    const { d: data } = event;
+    if (!events.hasOwnProperty(packet.t)) return;
 
-    const user = client.users.get(data.user_id);
+    let guild = client.guilds.get(packet.d.guild_id);
 
-    const channel = client.channels.get(data.channel_id) || await user.createDM();
+    let channel = guild.channels.get(packet.d.channel_id);
 
-    if (channel.messages.has(data.message_id)) return;
+    let member = guild.members.get(packet.d.author.id);
 
-    const message = await channel.fetchMessage(data.message_id);
-
-    client.emit(events[event.t], channel, user, message);
-});
+    let messageLast = member.lastMessageID;
+}); */
 
 // Commands
 client.on("message", async(message) => {
+
+    const args = message.content.slice(prefix.length).trim().split(/ +/g);
 
     // Checken ob die Nachricht aus einer Guild kam
     if (!message.guild) return;
@@ -88,131 +102,173 @@ client.on("message", async(message) => {
     if (message.author.bot) return;
 
     // shutdown Command
-    if (message.content === `${config.prefix}shutdown`) {
+    if (message.content === `${prefix}shutdown`) {
         require("./commands/shutdown").do({
             message: message,
             logChannel: logChannel,
-            client: client
+            client: client,
+            ownerID: ownerID
         });
     }
 
-    if (message.content.startsWith(`${config.prefix}eval`)) {
+    if (message.content.startsWith(`${prefix}eval`)) {
         require("./commands/eval").do({
             message: message,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args,
+            ownerID: ownerID
         });
     }
 
     // BAN Command
-    if (message.content.startsWith(`${config.prefix}ban`)) {
+    if (message.content.startsWith(`${prefix}ban`)) {
         require("./commands/ban").do({
             message: message,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args
         });
     }
 
     // HELP Command
-    if (message.content === `${config.prefix}help`) {
+    if (message.content === `${prefix}help`) {
         require("./commands/help").do({
             message: message
         });
     }
 
     // MUTE Command
-    if (message.content.startsWith(`${config.prefix}mute`)) {
+    if (message.content.startsWith(`${prefix}mute`)) {
         require("./commands/mute").do({
             message: message,
             logChannel: logChannel,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args,
+            staffrole: staffrole,
+            prefix: prefix,
+            muterole: muterole,
+            appName: appName,
+            version: version
         });
     }
 
     // UNMUTE Command
-    if (message.content.startsWith(`${config.prefix}unmute`)) {
+    if (message.content.startsWith(`${prefix}unmute`)) {
         require("./commands/unmute").do({
             message: message,
             logChannel: logChannel,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args,
+            staffrole: staffrole,
+            prefix: prefix,
+            muterole: muterole,
+            appName: appName
         });
     }
 
     // KICK Command
-    if (message.content.startsWith(`${config.prefix}kick`)) {
+    if (message.content.startsWith(`${prefix}kick`)) {
         require("./commands/kick").do({
             message: message,
             logChannel: logChannel,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args,
+            staffrole: staffrole,
+            appName: appName,
+            version: version,
+            prefix: prefix
         });
     }
 
     // WARN Command
-    if (message.content.startsWith(`${config.prefix}warn`)) {
+    if (message.content.startsWith(`${prefix}warn`)) {
         require("./commands/warn").do({
             message: message,
             logChannel: logChannel,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g)
+            args: args,
+            staffrole: staffrole,
+            prefix: prefix,
+            appName: appName,
+            version: version
         });
     }
 
     // USER Command (zeigt Infos z.B.: Mutes, Warns etc)
-    if (message.content.startsWith(`${config.prefix}user`)) {
+    if (message.content.startsWith(`${prefix}user`)) {
         require("./commands/user").do({
             message: message,
-            logChannel: logChanel
+            logChannel: logChanel,
+            staffrole: staffrole,
+            prefix: prefix,
+            appName: appName,
+            version: version
         });
     }
 
     // Easter Egg :)
-    if (message.content === `${config.prefix}random`) {
+    if (message.content === `${prefix}random`) {
         require("./commands/random").do({
-            message: message
+            message: message,
+            appName: appName,
+            version: version
         });
     }
 
-    if (message.content === `${config.prefix}le`) {
+    if (message.content === `${prefix}le`) {
         let emojiList = message.guild.emojis.map(e => e.toString()).join(" ");
         await message.channel.send(emojiList);
     }
 
-    if (message.content.startsWith(`${config.prefix}tempmute`)) {
+    if (message.content.startsWith(`${prefix}tempmute`)) {
         require("./commands/tempmute").do({
             message: message,
-            args: message.content.slice(config.prefix.length).trim().split(/ +/g),
-            logChannel: logChannel
+            args: args,
+            logChannel: logChannel,
+            staffrole: staffrole,
+            prefix: prefix,
+            muterole: muterole,
+            appName: appName,
+            version: version
         });
     }
 
-    if (message.content.startsWith(`${config.prefix}ticket`)) {
-        let args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+    if (message.content.startsWith(`${prefix}ticket`)) {
         let cmdPartTwo = args[1];
 
         if (cmdPartTwo === "new") {
             require("./commands/ticket-system/ticket-new").do({
                 message: message,
                 args: args,
-                logChannel: logChannel
+                logChannel: logChannel,
+                prefix: prefix,
+                staffrole: staffrole,
+                appName: appName
             });
         } else if (cmdPartTwo === "add") {
             require("./commands/ticket-system/ticket-add").do({
                 message: message,
                 args: args,
-                logChannel: logChannel
+                logChannel: logChannel,
+                staffrole: staffrole,
+                prefix: prefix,
+                appName: appName,
+                version: version
             });
         } else if (cmdPartTwo === "close") {
             require("./commands/ticket-system/ticket-close").do({
                 message: message,
                 args: args,
-                logChannel: logChannel
+                logChannel: logChannel,
+                staffrole: staffrole,
+                prefix: prefix,
+                appName: appName,
+                version: version
             });
         } else if (cmdPartTwo === "topic") {
             require("./commands/ticket-system/ticket-topic").do({
                 message: message,
                 args: args,
-                logChannel: logChannel
+                logChannel: logChannel,
+                staffrole: staffrole,
+                appName: appName
             });
         }
     }
 });
 
 // Connecten zu Discord
-client.login(config.clientToken);
+client.login(process.env.BOT_TOKEN);

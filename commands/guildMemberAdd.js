@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const config = require("../config/config");
 
 module.exports = {
     do: function(params) {

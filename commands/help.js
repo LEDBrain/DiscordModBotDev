@@ -1,4 +1,3 @@
-const config = require("../config/config");
 const Discord = require("discord.js");
 
 module.exports = {

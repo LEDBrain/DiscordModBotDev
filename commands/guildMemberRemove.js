@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const config = require("../config/config");
 
 module.exports = {
     do: function(params) {
@@ -10,7 +9,7 @@ module.exports = {
             .setTitle("Ein Jemand ist geleaved...")
             .setColor(0xea7362)
             .addField("Member", member.toString())
-            .setFooter(`${config.appName} ${config.version}`)
+            .setFooter(`${params.appName} ${params.version}`)
             .setTimestamp();
 
         params.logChannel.send({ embed: leaveEmbed })

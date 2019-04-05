@@ -1,13 +1,10 @@
-const Discord = require("discord.js");
-const config = require("../config/config");
-
 module.exports = {
     do: async function(params) {
 
         let message = params.message;
         let args = params.args.slice(1);
 
-        if (message.author.id !== config.ownerID) return await message.channel.send('this command is only made for the bot owner to use');
+        if (message.author.id !== params.ownerID) return await message.channel.send('this command is only made for the bot owner to use');
 
         const clean = text => {
             if (typeof(text) === "string")
@@ -16,7 +13,7 @@ module.exports = {
                 return text;
         }
 
-        if (message.author.id === config.ownerID) {
+        if (message.author.id === params.ownerID) {
             try {
                 const code = args.join(' ');
                 let evaled = eval(code);

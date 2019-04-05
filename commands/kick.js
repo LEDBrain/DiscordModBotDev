@@ -1,5 +1,3 @@
-// Config holen
-const config = require("../config/config");
 // Discord importieren um RichEmbed zu benutzen
 const Discord = require("discord.js");
 
@@ -12,7 +10,7 @@ module.exports = {
         let reason = params.args.slice(2).join(" ");
 
         // Keine Staff Rolle? Schade
-        if (!params.message.member.roles.has(config.staffrole)) {
+        if (!params.message.member.roles.has(params.staffrole)) {
             require("./commandModules/nopermEmbed").do({
                 message: params.message,
                 logChannel: params.logChannel
@@ -21,19 +19,19 @@ module.exports = {
 
         // Falls kein Member angegeben wurde
         if (!member) {
-            params.message.channel.send(`Bitte gebe ein User an! Format: \`${config.prefix}kick <@user> <Grund>\``);
+            params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}kick <@user> <Grund>\``);
             return;
         }
 
         // Der Member ist Mitglied des Teams? Ne dann nicht
-        if (member.roles.has(config.staffrole)) {
+        if (member.roles.has(params.staffrole)) {
             params.message.channel.send("Du kannst keine Administratoren oder Moderatoren kicken!");
             return;
         }
 
         // Falls kein Grund angegeben wurde
         if (!reason) {
-            params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${config.prefix}kick <@user> <Grund>\``);
+            params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}kick <@user> <Grund>\``);
             return;
         }
 
@@ -44,7 +42,7 @@ module.exports = {
             .addField("Member", `${member.user.username}/${member.id}`)
             .addField("Moderator", params.message.author)
             .addField("Grund", `\`\`\`reason\`\`\``)
-            .setFooter(`${config.appName} ${config.version}`)
+            .setFooter(`${params.appName} ${params.version}`)
             .setTimestamp();
 
         // erst kicken...

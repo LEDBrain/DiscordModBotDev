@@ -46,10 +46,14 @@ module.exports = {
             .setTimestamp();
 
         // erst kicken...
-        await member.kick(reason);
-        // Dann in den Channel die Nachricht senden, dass gekickt wurde
-        await params.message.channel.reply(`${member.user.username} wurde vom Server gekickt.`);
-        // Und jetzt ins Log mit der Embed
-        await params.logChannel.send({ embed: kickEmbed });
+        member.kick(reason)
+            .then(() => {
+                // Dann in den Channel die Nachricht senden, dass gekickt wurde
+                params.message.channel.reply(`${member.user.username} wurde vom Server gekickt.`)
+                    .then(() => {
+                        // Und jetzt ins Log mit der Embed
+                        params.logChannel.send({embed: kickEmbed});
+                    });
+            });
     }
 };

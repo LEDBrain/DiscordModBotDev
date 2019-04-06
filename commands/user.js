@@ -4,10 +4,10 @@ const Discord = require("discord.js");
 const db = require("../config/db");
 
 module.exports = {
-    do: async function(params) {
+    do: function(params) {
 
         // Member aus der Nachricht klauen
-        let member = message.mentions.members.first();
+        let member = params.message.mentions.members.first();
 
         // Kein Teammember? Oh sorry
         if (!params.message.member.roles.has(params.staffrole)) {
@@ -18,34 +18,25 @@ module.exports = {
         }
 
         // Falls kein Member angegeben wurde
-        if (!member) {
-            params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix} user <@user>\``);
-            return;
-        }
-
-        // Warns des Users aus der DB holen
-        let warns = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], function(err, result) { // lgtm[js/unused-local-variable]
-            if (err) throw err;
-        });
+        if (!member) return params.message.channel.send(`Bitte gebe einen User an! Format: \`${params.prefix} user <@user>\``);
 
         // Mutes des Users aus der DB holen
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], function(err, result) { // lgtm[js/unused-local-variable]
+        db.query("SELECT `mutes`, `warns` FROM `mute`, `warnungen` WHERE `mute`.`id` = ? AND `warnungen`.`id` = `mute`.`id`", [member.id], (err, result) => {
             if (err) throw err;
+            // Nachricht fürs Log vorbereiten
+            let userEmbed = new Discord.RichEmbed()
+                .setTitle(`Userinfo für ${member.user.username}`)
+                .setColor(0x1fab89)
+                .addField("Mutes", `\`\`\`${result[0].mutes || 0}\`\`\``)
+                .addField("Warns", `\`\`\`${result[0].warns || 0}\`\`\``)
+                .setFooter(`${params.appName} ${params.version}`)
+                .setTimestamp();
+
+            // Senden
+            params.message.channel.send({ embed: userEmbed });
             // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
             db.end();
             console.log("Disconnected");
         });
-
-        // Nachricht fürs Log vorbereiten
-        let userEmbed = new Discord.RichEmbed()
-            .setTitle(`Userinfo für ${member.user.username}`)
-            .setColor(0x1fab89)
-            .addField("Mutes", `\`\`\`${result[0].mutes || 0}\`\`\``)
-            .addField("Warns", `\`\`\`${result[0].warns || 0}\`\`\``)
-            .setFooter(`${params.appName} ${params.version}`)
-            .setTimestamp()
-
-        // Senden
-        await params.message.channel.send({ embed: userEmbed });
     }
 };

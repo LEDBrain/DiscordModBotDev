@@ -21,7 +21,7 @@ module.exports = {
 
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
-        db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], (err, result) => {
+        db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", member.id, (err, result) => {
             if (err) throw (err);
             let sql;
             let warns = result[0] ? result[0].warns + 1 : 1;

@@ -21,7 +21,7 @@ module.exports = {
         if (!member) return params.message.channel.send(`Bitte gebe einen User an! Format: \`${params.prefix} user <@user>\``);
 
         // Mutes des Users aus der DB holen
-        db.query("SELECT `mutes`, `warns` FROM `mute`, `warnungen` WHERE `id` = ?", member.id, (err, result) => {
+        db.query("SELECT `mutes`, `warns` FROM `mute`, `warnungen` WHERE `mute`.`id` = ? AND `warnungen`.`id` = `mute`.`id`", member.id, (err, result) => {
             if (err) throw err;
             // Nachricht fürs Log vorbereiten
             let userEmbed = new Discord.RichEmbed()

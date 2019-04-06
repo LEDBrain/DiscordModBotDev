@@ -26,7 +26,7 @@ module.exports = {
         // Bestätigung senden
         await params.message.channel.send(`${member} wurde entmuted`);
 
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], function(err) {
+        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, err => {
             if (err) throw err;
             db.end();
             console.log("Disconnected");

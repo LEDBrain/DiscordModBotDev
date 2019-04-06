@@ -17,7 +17,7 @@ module.exports = {
 
         if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
-        if (member.roles.has(config.staffrole)) return rparams.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+        if (member.roles.has(config.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
 
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 

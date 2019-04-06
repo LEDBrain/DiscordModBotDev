@@ -31,7 +31,7 @@ client.on("ready", () => {
 
     // Client Server ausgeben
     console.log("Verbunden zu: ");
-    client.guilds.forEach((guild) => {
+    client.guilds.forEach(guild => {
         console.log(` - ${guild.name}`);
     });
 
@@ -39,14 +39,14 @@ client.on("ready", () => {
     client.user.setActivity("auf Nachrichten.", { type: "WATCHING" });
 });
 
-client.on("guildMemberAdd", (member) => {
+client.on("guildMemberAdd", member => {
     require("./commands/guildMemberAdd").do({
         member: member,
         logChannel: logChannel
     });
 });
 
-client.on("guildMemberRemove", (member) => {
+client.on("guildMemberRemove", member => {
     require("./commands/guildMemberRemove").do({
         member: member,
         logChannel: logChannel,
@@ -56,7 +56,7 @@ client.on("guildMemberRemove", (member) => {
 });
 
 // LOG für eine gelöschte Nachricht
-client.on("messageDelete", (message) => {
+client.on("messageDelete", message => {
     require("./commands/messageDelete").do({
         message: message,
         logChannel: logChannel,
@@ -91,7 +91,7 @@ client.on("messageUpdate", (oldMessage, newMessage) => {
 }); */
 
 // Commands
-client.on("message", async(message) => {
+client.on("message", async message => {
 
     const args = message.content.slice(prefix.length).trim().split(/ +/g);
 

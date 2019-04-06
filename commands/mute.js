@@ -23,7 +23,7 @@ module.exports = {
         db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, function(err, result) {
             if (err) throw (err);
             let mutes = result[0] ? result[0].mutes + 1 : 1;
-            let sql = result[0] ? mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]) : mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
+            let sql = !result[0] ? mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]) : mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
             db.query(sql, err => {
                 if (err) throw(err);
                 member.addRole(params.muterole, reason)

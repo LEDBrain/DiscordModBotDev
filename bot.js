@@ -191,7 +191,7 @@ client.on("message", async message => {
     if (message.content.startsWith(`${prefix}user`)) {
         require("./commands/user").do({
             message: message,
-            logChannel: logChanel,
+            logChannel: logChannel,
             staffrole: staffrole,
             prefix: prefix,
             appName: appName,

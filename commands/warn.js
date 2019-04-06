@@ -17,7 +17,7 @@ module.exports = {
 
         if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
-        if (member.roles.has(config.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
+        if (member.roles.has(params.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
 
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
@@ -34,7 +34,7 @@ module.exports = {
                         .addField("User", `${member.user}/${member.id}`)
                         .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
                         .addField("Warns", warns)
-                        .addField("Grund", `\`\`\`reason\`\`\``)
+                        .addField("Grund", `\`\`\`${reason}\`\`\``)
                         .setFooter(`${params.appName} ${params.version}`)
                         .setTimestamp();
 

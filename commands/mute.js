@@ -14,13 +14,15 @@ module.exports = {
             });
         }
 
+        if (member.roles.has(params.muterole)) return params.message.channel.send("Der User ist bereits gemuted!");
+
         if (member.roles.has(params.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
 
         if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}mute <@user> <Grund>\``);
 
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}mute <@user> <Grund>\``);
 
-        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, function(err, result) {
+        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], function(err, result) {
             if (err) throw (err);
             let mutes = result[0] ? result[0].mutes + 1 : 1;
             let sql = !result[0] ? mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]) : mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
@@ -42,9 +44,9 @@ module.exports = {
 
                         params.logChannel.send({ embed: muteEmbed });
                     });
-                db.end();
-                console.log("Disconnected");
             });
+            db.end();
+            console.log("Disconnected");
         });
     }
 };

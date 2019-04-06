@@ -4,7 +4,7 @@ const db = require("../config/db");
 const mysql = require("mysql");
 
 module.exports = {
-    do: function(params) {
+    do: async function(params) {
         let mutetime = params.args[2];
         let reason = params.args[3];
         const member = params.message.mentions.members.first();
@@ -16,6 +16,8 @@ module.exports = {
             });
         }
 
+        if (member.roles.has(params.muterole)) return params.message.channel.send("Der User ist bereits gemuted!");
+
         if (member.roles.has(params.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren muten!");
 
         if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}tempmute <@user> <Grund>\``);
@@ -25,7 +27,7 @@ module.exports = {
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}tempmute <@user> <Grund>\``);
 
 
-        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, (err, result) => {
+        await db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, (err, result) => {
             if (err) throw (err);
             let mutes = result[0] ? result[0].mutes + 1 : 1;
             let sql = !result[0] ? mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]) : mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
@@ -46,13 +48,11 @@ module.exports = {
                             .setFooter(`${params.appName} ${params.version}`)
                             .setTimestamp();
                         params.logChannel.send({ embed: muteEmbed })
-                            .then(() => {
-                                db.end();
-                                console.log("Disconnected");
-                            });
                         }); 
                     });
-            }); 
+            });
+            db.end();
+            console.log("Disconnected");
         });
 
         setTimeout(async function() {

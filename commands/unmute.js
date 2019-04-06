@@ -2,7 +2,7 @@ const db = require("../config/db");
 const Discord = require("discord.js");
 
 module.exports = {
-    do: function(params) {
+    do: async function(params) {
         const member = params.message.mentions.members.first();
         let reason = params.args.slice(2).join(" ");
 
@@ -13,13 +13,15 @@ module.exports = {
             });
         }
 
+        if (!member.roles.has(params.muterole)) return params.message.channel.send("Der User ist nicht gemuted!");
+
         if (member.roles.has(params.staffrole)) return params.message.channel.send("Du kannst keine Administratoren oder Moderatoren entmuten!");
 
         if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}unmute <@user> <Grund>\``);
 
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}unmute <@user> <Grund>\``);
 
-        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, (err, result) => {
+        await db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], (err, result) => {
             if (err) throw err;
             let mutes = result[0] ? result[0].mutes : 0;
             // Role entfernen
@@ -42,8 +44,8 @@ module.exports = {
                     // Embed in den LOG schicken
                     params.logChannel.send({embed: unmuteEmbed});
                 });
-            db.end();
-            console.log("Disconnected");
+                db.end();
+                console.log("Disconnected");
         });
     }
 };

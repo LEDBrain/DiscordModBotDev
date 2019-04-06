@@ -32,9 +32,9 @@ module.exports = {
             }
             db.query(sql, error => {
                 if (error) throw (error);
-                params.message.channel.send(`${member.user} wurde ${warns === 1 ? "zum ersten mal" : ""} verwarnt. Jetzige Warns: ${warns}`);
+                params.message.channel.send(`${member.user} wurde ${warns === 1 ? "zum ersten mal " : ""}verwarnt. Jetzige Warns: ${warns}`);
                 let warnEmbed = new Discord.RichEmbed()
-                        .setTitle(`Ein User wurde ${warns === 1 ? "zum ersten mal" : ""} verwarnt!`)
+                        .setTitle(`Ein User wurde ${warns === 1 ? "zum ersten mal " : ""}verwarnt!`)
                         .setColor(0xf4eb42)
                         .addField("User", `${member.user}/${member.id}`)
                         .addField("Moderator", `${params.message.author}/${params.message.author.id}`)

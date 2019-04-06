@@ -15,25 +15,22 @@ module.exports = {
         }
 
         if (!member) {
-            params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
-            return;
+            return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
         }
 
         if (member.roles.has(config.staffrole)) {
-            params.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
-            return;
+            return rparams.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
         }
 
         if (!reason) {
-            params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
-            return;
+            return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
         }
 
-        db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], function(err, result) {
+        db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], (err, result) => {
             if (err) throw (err);
             if (!result[0]) {
                 let warns = 1;
-                db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (?, ?, ?)", [member.id, member.user.username, warns], function(error) {
+                db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (?, ?, ?)", [member.id, member.user.username, warns], (error) => {
                     if (error) throw (error);
                     params.message.channel.send(`${member.user} wurde zum ersten mal verwarnt`);
 
@@ -51,7 +48,7 @@ module.exports = {
                 });
             } else {
                 let warns = result[0].warns + 1;
-                db.query("UPDATE `warnungen` SET `warns` = ? WHERE `id` = ?", [warns, member.id], function(error) {
+                db.query("UPDATE `warnungen` SET `warns` = ? WHERE `id` = ?", [warns, member.id], (error) => {
                     if (error) throw (error);
                     params.message.channel.send(`${member.user} wurde verwarnt. Jetzige Warns: ${warns}`);
 

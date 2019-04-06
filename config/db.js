@@ -9,7 +9,7 @@ let db = mysql.createConnection({
     database: process.env.DB_DATABASE
 });
 
-db.connect(function(err) {
+db.connect((err) => {
     if (err) throw err;
 
     db.query("CREATE TABLE IF NOT EXISTS `warnungen` (`id` VARCHAR(255) NOT NULL PRIMARY KEY, `username` VARCHAR(255) NOT NULL, `warns` TINYINT(255) NOT NULL DEFAULT 0)");

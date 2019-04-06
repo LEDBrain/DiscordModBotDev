@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const ms = require("ms");
 const db = require("../config/db");
+const mysql = require("mysql");
 
 module.exports = {
     do: async function(params) {
@@ -24,69 +25,58 @@ module.exports = {
         if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}tempmute <@user> <Grund>\``);
 
 
-        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], async function(err, result) {
+        db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, (err, result) => {
             if (err) throw (err);
+            let sql;
+            let mutes = result[0] ? result[0].mutes + 1 : 1;
             if (!result[0]) {
-                let mutes = 1;
-                db.query("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, ?)", [member.id, member.user.username, mutes], async function(error) {
-                    if (error) throw (error);
-                    await member.addRole(params.muterole, reason);
-                    await params.message.channel.send(`<@${member.id}> wurde für ${ms(ms(mutetime))} gemuted`);
-
-                    let fmuteEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde das erste mal gemuted")
-                        .setColor(0xe73e51)
-                        .addField("User", `${member.user}/${member.id}`)
-                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
-                        .addField("Mutes gesamt", mutes)
-                        .addField("Grund", `\`\`\`${reason}\`\`\``)
-                        .addField("Zeit", mutetime)
-                        .setFooter(`${params.appName} ${params.version}`)
-                        .setTimestamp();
-
-                    // Embed in den LOG schicken
-                    await params.logChannel.send({ embed: fmuteEmbed });
-                });
+                sql = mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]);
             } else {
-                let mutes = result[0].mutes + 1;
-                db.query("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id], async function(error) {
-                    if (error) throw (error);
-                    await member.addRole(params.muterole, reason);
-                    await params.message.channel.send(`<@${member.id}> wurde für ${ms(ms(mutetime))} gemuted`);
-
-                    let muteEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde gemuted!")
-                        .setColor(0xe73e51)
-                        .addField("User", `${member.user}/${member.id}`)
-                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
-                        .addField("Mutes gesamt", mutes)
-                        .addField("Grund", `\`\`\`${reason}\`\`\``)
-                        .addField("Zeit", mutetime)
-                        .setFooter(`${params.appName} ${params.version}`)
-                        .setTimestamp();
-
-                    await params.logChannel.send({ embed: muteEmbed });
-                });
+                sql = mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
             }
-            db.end();
-            console.log("Disconnected");
+            db.query(sql, (err) => {
+                if (err) throw (err);
+                member.addRole(params.muterole, reason)
+                    .then(() => {
+                    params.message.channel.send(`<@${member.id}> wurde für ${ms(ms(mutetime))} gemuted`)
+                        .then(() => {
+                        let muteEmbed = new Discord.RichEmbed()
+                            .setTitle(`Ein User wurde ${mutes === 1 ? "zum ersten mal " : ""}gemuted!`)
+                            .setColor(0xe73e51)
+                            .addField("User", `${member.user}/${member.id}`)
+                            .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
+                            .addField("Mutes gesamt", mutes)
+                            .addField("Grund", `\`\`\`${reason}\`\`\``)
+                            .addField("Zeit", mutetime)
+                            .setFooter(`${params.appName} ${params.version}`)
+                            .setTimestamp();
+                        params.logChannel.send({ embed: muteEmbed })
+                            .then(() => {
+                                db.end();
+                                console.log("Disconnected");
+                            });
+                        }); 
+                    });
+            }); 
         });
 
         setTimeout(async function() {
-            await member.removeRole(params.muterole, reason);
-            params.message.channel.send(`<@${member.id}> wurde entmuted!`);
+            member.removeRole(params.muterole, reason)
+                .then(() => {
+                    params.message.channel.send(`<@${member.id}> wurde entmuted!`);
 
-            let tmEndeEmbed = new Discord.RichEmbed()
-                .setTitle("Ein User wurde entmuted (auto)")
-                .setColor(0x179e40)
-                .addField("User", `${member.user}/${member.id}`)
-                .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
-                .addField("Grund", `\`\`\`${reason}\`\`\``)
-                .addField("Zeit", mutetime)
-                .setFooter(`${params.appName} ${params.version}`)
-                .setTimestamp();
+                    let tmEndeEmbed = new Discord.RichEmbed()
+                        .setTitle("Ein User wurde entmuted (auto)")
+                        .setColor(0x179e40)
+                        .addField("User", `${member.user}/${member.id}`)
+                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
+                        .addField("Grund", `\`\`\`${reason}\`\`\``)
+                        .addField("Zeit", mutetime)
+                        .setFooter(`${params.appName} ${params.version}`)
+                        .setTimestamp();
 
-            params.logChannel.send({ embed: tmEndeEmbed });
+                    params.logChannel.send({ embed: tmEndeEmbed });
+                });
         }, ms(mutetime));
     }
 }

@@ -4,7 +4,7 @@ const db = require("../config/db");
 const mysql = require("mysql");
 
 module.exports = {
-    do: async function(params) {
+    do: function(params) {
         let mutetime = params.args[2];
         let reason = params.args[3];
         const member = params.message.mentions.members.first();
@@ -27,13 +27,8 @@ module.exports = {
 
         db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, (err, result) => {
             if (err) throw (err);
-            let sql;
             let mutes = result[0] ? result[0].mutes + 1 : 1;
-            if (!result[0]) {
-                sql = mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]);
-            } else {
-                sql = mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
-            }
+            let sql = result[0] ? mysql.format("INSERT INTO `mute` (`id`, `username`, `mutes`) VALUE (?, ?, 1)", [member.id, member.user.username]) : mysql.format("UPDATE `mute` SET `mutes` = ? WHERE `id` = ?", [mutes, member.id]);
             db.query(sql, (err) => {
                 if (err) throw (err);
                 member.addRole(params.muterole, reason)

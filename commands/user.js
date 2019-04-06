@@ -18,18 +18,15 @@ module.exports = {
         }
 
         // Falls kein Member angegeben wurde
-        if (!member) {
-            params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix} user <@user>\``);
-            return;
-        }
+        if (!member) return params.message.channel.send(`Bitte gebe einen User an! Format: \`${params.prefix} user <@user>\``);
 
         // Warns des Users aus der DB holen
-        let warns = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], function(err, result) { // lgtm[js/unused-local-variable]
+        let warns = db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", member.id, err => {
             if (err) throw err;
         });
 
         // Mutes des Users aus der DB holen
-        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", [member.id], function(err, result) { // lgtm[js/unused-local-variable]
+        let mutes = db.query("SELECT `mutes` FROM `mute` WHERE `id` = ?", member.id, err => {
             if (err) throw err;
             // DB Connection beenden weil es zu abstürzen aufgrund von MySQL ERR gab
             db.end();

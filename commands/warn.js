@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const Discord = require("discord.js");
+const mysql = require("mysql");
 
 module.exports = {
     do: function(params) {
@@ -14,46 +15,27 @@ module.exports = {
             });
         }
 
-        if (!member) {
-            return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
-        }
+        if (!member) return params.message.channel.send(`Bitte gebe ein User an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
-        if (member.roles.has(config.staffrole)) {
-            return rparams.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
-        }
+        if (member.roles.has(config.staffrole)) return rparams.message.channel.send("Du kannst keine Administratoren oder Moderatoren Warnen!");
 
-        if (!reason) {
-            return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
-        }
+        if (!reason) return params.message.channel.send(`Bitte gebe einen Grund an! Format: \`${params.prefix}warn <@user> <Grund>\``);
 
         db.query("SELECT `warns` FROM `warnungen` WHERE `id` = ?", [member.id], (err, result) => {
             if (err) throw (err);
+            let sql;
+            let warns = result[0] ? result[0].warns + 1 : 1;
             if (!result[0]) {
-                let warns = 1;
-                db.query("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (?, ?, ?)", [member.id, member.user.username, warns], (error) => {
-                    if (error) throw (error);
-                    params.message.channel.send(`${member.user} wurde zum ersten mal verwarnt`);
-
-                    let firstWarnEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde das erste Mal verwarnt!")
-                        .setColor(0xf4eb42)
-                        .addField("User", `${member.user}/${member.id}`)
-                        .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
-                        .addField("Warns", warns)
-                        .addField("Grund", `\`\`\`reason\`\`\``)
-                        .setFooter(`${params.appName} ${params.version}`)
-                        .setTimestamp();
-
-                    params.logChannel.send({ embed: firstWarnEmbed });
+                sql = mysql.format("INSERT INTO `warnungen` (`id`, `username`, `warns`) VALUE (?, ?, 1)", [member.id, member.user.username]);
                 });
             } else {
-                let warns = result[0].warns + 1;
-                db.query("UPDATE `warnungen` SET `warns` = ? WHERE `id` = ?", [warns, member.id], (error) => {
-                    if (error) throw (error);
-                    params.message.channel.send(`${member.user} wurde verwarnt. Jetzige Warns: ${warns}`);
-
-                    let warnEmbed = new Discord.RichEmbed()
-                        .setTitle("Ein User wurde verwarnt!")
+                sql = mysql.format("UPDATE `warnungen` SET `warns` = ? WHERE `id` = ?", [warns, member.id]);
+            }
+            db.query(sql, (error => {
+                if (error) throw (error);
+                params.message.channel.send(`${member.user} wurde ${warns === 1 ? "zum ersten mal" : ""} verwarnt. Jetzige Warns: ${warns}`);
+                let warnEmbed = new Discord.RichEmbed()
+                        .setTitle(`Ein User wurde ${warns === 1 ? "zum ersten mal" : ""} verwarnt!`)
                         .setColor(0xf4eb42)
                         .addField("User", `${member.user}/${member.id}`)
                         .addField("Moderator", `${params.message.author}/${params.message.author.id}`)
@@ -62,11 +44,10 @@ module.exports = {
                         .setFooter(`${params.appName} ${params.version}`)
                         .setTimestamp();
 
-                    params.logChannel.send({ embed: warnEmbed });
-                });
-            }
-            db.end();
-            console.log("Disconnected");
+                params.logChannel.send({ embed: warnEmbed });
+                db.end();
+                console.log("Disconnected");
+            });
         });
     }
 };

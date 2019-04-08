@@ -1,6 +1,6 @@
 // Discord Client erstellen
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const client = new Discord.Client({fetchAllMembers: true});
 
 const dotenv = require('dotenv');
 dotenv.config();

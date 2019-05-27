@@ -1,6 +1,8 @@
 // Discord Client erstellen
 const Discord = require("discord.js");
-const client = new Discord.Client({fetchAllMembers: true});
+const client = new Discord.Client({
+    fetchAllMembers: true
+});
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -36,7 +38,9 @@ client.on("ready", () => {
     });
 
     // Activity auf "Schaut auf Nachrichten" setzen
-    client.user.setActivity("auf Nachrichten.", { type: "WATCHING" });
+    client.user.setActivity("auf Nachrichten.", {
+        type: "WATCHING"
+    });
 });
 
 client.on("guildMemberAdd", member => {
@@ -130,7 +134,10 @@ client.on("message", async message => {
     // HELP Command
     if (message.content === `${prefix}help`) {
         require("./commands/help").do({
-            message: message
+            message: message,
+            prefix: prefix,
+            appName: appName,
+            version: version
         });
     }
 

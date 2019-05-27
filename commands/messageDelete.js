@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 module.exports = {
-    do: function(params) {
+    do: function (params) {
 
         if (params.message.author.bot) return;
 
@@ -10,14 +10,16 @@ module.exports = {
             let linkChannel = `https://canary.discordapp.com/channels/${params.message.guild.id}/${params.message.channel.id}`;
             // Embed generieren
             let messageDelete = new Discord.RichEmbed()
-                .setTitle("Nachricht gelöscht!")
+                .setTitle("A message was deleted!")
                 .setColor(0x00AE86)
-                .setDescription(`Nachricht\n \`\`\` ${params.message.content} \`\`\`\n User\n ${params.message.author} \n\n [Zum Channel](${linkChannel})`)
+                .setDescription(`Message\n \`\`\` ${params.message.content} \`\`\`\n User\n ${params.message.author} \n\n [Link to channel](${linkChannel})`)
                 .setFooter(`${params.appName} ${params.version}`)
                 .setTimestamp();
 
             // Nachricht senden
-            params.logChannel.send({ embed: messageDelete });
+            params.logChannel.send({
+                embed: messageDelete
+            });
         }
 
     }

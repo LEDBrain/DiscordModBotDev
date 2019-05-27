@@ -1,7 +1,7 @@
 const Discord = require("discord.js");
 
 module.exports = {
-    do: function(params) {
+    do: function (params) {
 
         if (params.oldMessage.content === params.newMessage.content) return;
 
@@ -12,17 +12,18 @@ module.exports = {
             let linkChannel = `https://canary.discordapp.com/channels/${params.newMessage.guild.id}/${params.newMessage.channel.id}`;
             // Embed generieren
             let messageUpdate = new Discord.RichEmbed()
-                .setTitle("Nachricht editiert!")
+                .setTitle("A message was edited!")
                 .setColor(0x30add3)
-                .addField(`Ursprüngliche Nachricht:`, `\`\`\`${params.oldMessage}\`\`\``)
-                .addField(`Neue Nachricht:`, `\`\`\`${params.newMessage}\`\`\``)
-                .setDescription(`[Zum Beitrag](${linkChannel})`)
+                .addField("Old message:", `\`\`\`${params.oldMessage}\`\`\``)
+                .addField("New message:", `\`\`\`${params.newMessage}\`\`\``)
+                .setDescription(`[Link to message](${linkChannel})`)
                 .setFooter(`${params.appName} ${params.version}`)
                 .setTimestamp();
 
             // Nachricht senden
-            params.logChannel.send({ embed: messageUpdate });
+            params.logChannel.send({
+                embed: messageUpdate
+            });
         }
-
     }
 };

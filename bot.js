@@ -10,13 +10,13 @@ dotenv.config();
 //Erster LOG Channel schritt
 let logChannel;
 
-let appName = process.env.APP_NAME;
-let version = process.env.DEV_VERSION;
-let logChannelID = process.env.LOG_CHANNEL;
-let prefix = process.env.PREFIX;
-let ownerID = process.env.OWNER_ID;
-let staffrole = process.env.STAFF_ROLE;
-let muterole = process.env.MUTE_ROLE;
+let appName = process.env.APP_NAME,
+    version = process.env.DEV_VERSION,
+    logChannelID = process.env.LOG_CHANNEL,
+    prefix = process.env.PREFIX,
+    ownerID = process.env.OWNER_ID,
+    staffrole = process.env.STAFF_ROLE,
+    muterole = process.env.MUTE_ROLE;
 
 
 const events = {

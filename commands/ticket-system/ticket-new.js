@@ -63,11 +63,7 @@ Please use the time until a team member arrives to describe your problem in deta
                     let linkChannel = `https://canary.discordapp.com/channels/${guild.id}/${createdChannel.id}`;
 
                     let ticketLog = new Discord.RichEmbed()
-<<<<<<< HEAD
                         .setTitle(`${params.message.author.toString()} created a Ticket.`)
-=======
-                        .setTitle(`${params.message.author.toString()} hat ein Ticket erstellt.`)
->>>>>>> 0fe6b4bd9ee1e7dda6ce7ead4355d17528e18914
                         .setColor(0xcf3030)
                         .addField("User", params.message.author.toString())
                         .setDescription(`[Channel](${linkChannel})`)

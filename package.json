@@ -11,7 +11,7 @@
         "more-colorful-logger": "^1.0.6",
         "ms": "latest",
         "mysql": "latest",
-        "superagent": "^4.1.0",
+        "superagent": "^5.0.6",
         "util": "^0.11.1"
     },
     "author": "KokosnussDEV"

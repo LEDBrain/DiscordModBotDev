@@ -1,0 +1,25 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "KBOE2",
+      "name": "Jan",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/27238105?v=4",
+      "profile": "https://github.com/KBOE2",
+      "contributions": [
+        "bug",
+        "maintenance",
+        "test"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "DiscordModBotDev",
+  "projectOwner": "TeamCodebusters",
+  "repoType": "github",
+  "repoHost": "https://github.com"
+}

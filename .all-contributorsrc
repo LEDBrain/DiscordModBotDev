@@ -12,7 +12,8 @@
       "profile": "https://github.com/KBOE2",
       "contributions": [
         "bug",
-        "maintenance"
+        "maintenance",
+        "test"
       ]
     }
   ],

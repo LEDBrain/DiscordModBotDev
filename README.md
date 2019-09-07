@@ -14,7 +14,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/KokosnussDEV"><img src="https://avatars3.githubusercontent.com/u/42553393?v=4" width="100px;" alt="Kokosnuss.exe"/><br /><sub><b>Kokosnuss.exe</b></sub></a><br /><a href="https://github.com/TeamCodebusters/DiscordModBotDev/commits?author=KokosnussDEV" title="Code">💻</a> <a href="#content-KokosnussDEV" title="Content">🖋</a> <a href="https://github.com/TeamCodebusters/DiscordModBotDev/commits?author=KokosnussDEV" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/KokosnussDEV"><img src="https://avatars3.githubusercontent.com/u/42553393?v=4" width="100px;" alt="Kokosnuss.exe"/><br /><sub><b>Kokosnuss.exe</b></sub></a><br /><a href="https://github.com/TeamCodebusters/DiscordModBotDev/commits?author=KokosnussDEV" title="Code">💻</a> <a href="#content-KokosnussDEV" title="Content">🖋</a> <a href="https://github.com/TeamCodebusters/DiscordModBotDev/commits?author=KokosnussDEV" title="Tests">⚠️</a> <a href="#maintenance-KokosnussDEV" title="Maintenance">🚧</a></td>
   </tr>
 </table>
 
